@@ -7,10 +7,10 @@ if __name__ == '__main__':
         ['python',
          'tof_data_grab.py',
          '--intensity',
-         'intensity.png',
+         'result_tof_data/intensity.png',
          '--depth',
-         'depth',
+         'result_tof_data/depth',
          '--heatmap',
-         'heatmap.png',]
+         'result_tof_data/heatmap.png',]
     )
     subprocess.run(['python', 'tof_data_grab.py'])
