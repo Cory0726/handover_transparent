@@ -1,8 +1,6 @@
-import os
-
+import argparse
 import cv2
-from pypylon import pylon
-from tools import rawdepth_to_heatmap
+import numpy as np
 from pypylon import pylon
 
 def create_basler_cam(serial_number: str) -> pylon.InstantCamera:
@@ -144,6 +142,12 @@ def split_tof_container_data(container) -> dict:
 def pcl_to_rawdepth(pcl):
     return pcl[:,:,2]  # Get z data from point cloud
 
+def rawdepth_to_heatmap(rawdepth):
+    gray_img = cv2.normalize(rawdepth, None, 0,255, cv2.NORM_MINMAX).astype(np.uint8)
+    heatmap = cv2.applyColorMap(255 - gray_img, cv2.COLORMAP_TURBO)
+    # heatmap = cv2.applyColorMap(255 - gray_img, cv2.COLORMAP_JET)
+    return heatmap
+
 def grab_one_point_cloud():
     """
     Grab one point cloud from camera.
@@ -225,16 +229,31 @@ def stream_tof_img(img_type: str) -> None:
     cam.Close()
     cv2.destroyAllWindows
 
-def main():
+def parse_args():
+    parser = argparse.ArgumentParser(description='Grab ToF camera data.')
+    parser.add_argument('--intensity', type=str)
+    parser.add_argument('--depth', type=str)
+    parser.add_argument('--heatmap', type=str)
+    parser.parse_args()
+    return parser.parse_args()
+
+def main(intensity_img_path, depth_img_path, depth_heatmap_path) -> None:
     # Stream the intensity image.
     print('Start streaming the ToF intensity images...')
     print('Press q to quit the stream.')
     stream_tof_img("Intensity_Image")
-    # Grab one intensity image.
+    # Grab and save one intensity image.
     intensity_img = grab_one_intensity()
-    print('Grab one intensity image')
-    cv2.imwrite("intensity_image.jpg", intensity_img, cv2.INTER_G)
+    print('Grab one intensity image.')
+    cv2.imwrite(intensity_img_path, intensity_img)
+    # Grab and save one depth image.
+    depth_img = pcl_to_rawdepth(grab_one_point_cloud())
+    print('Grab one depth image.')
+    np.save(depth_img_path, depth_img)
+    # Save the depth heatmap
+    cv2.imwrite(depth_heatmap_path, rawdepth_to_heatmap(depth_img))
 
 
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    main(args.intensity, args.depth, args.heatmap)
