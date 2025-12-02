@@ -62,58 +62,6 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     # ideal for 3D and multi-modal imaging applications.
     cam.GenDCStreamingMode.Value = "Off"
 
-def config_tof_data_comp(cam: pylon.InstantCamera, data_type: str) -> None:
-    """
-    Configure a ToF camera data container after opening the camera.
-    Args:
-        data_type (str): "Intensity_Image" or "Point_Cloud" or "Confidence_Map"
-    """
-    # Image component selector
-    if data_type == "Intensity_Image":
-        # Close 3d point cloud image
-        cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Range")
-        cam.GetNodeMap().GetNode("ComponentEnable").SetValue(False)
-        cam.GetNodeMap().GetNode("PixelFormat").SetValue("Coord3D_ABC32f")  # Coord3D_C16 / Coord3D_ABC32f
-        # Open intensity image
-        cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Intensity")
-        cam.GetNodeMap().GetNode("ComponentEnable").SetValue(True)
-        cam.GetNodeMap().GetNode("PixelFormat").SetValue("Mono16")
-        # Close confidence map
-        cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Confidence")
-        cam.GetNodeMap().GetNode("ComponentEnable").SetValue(False)
-        cam.GetNodeMap().GetNode("PixelFormat").SetValue("Confidence16")
-        print("Image selector: Intensity")
-    elif data_type == "Point_Cloud":
-        # Open 3d point cloud image
-        cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Range")
-        cam.GetNodeMap().GetNode("ComponentEnable").SetValue(True)
-        cam.GetNodeMap().GetNode("PixelFormat").SetValue("Coord3D_ABC32f")
-        # Close intensity image
-        cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Intensity")
-        cam.GetNodeMap().GetNode("ComponentEnable").SetValue(False)
-        cam.GetNodeMap().GetNode("PixelFormat").SetValue("Mono16")
-        # Close confidence map
-        cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Confidence")
-        cam.GetNodeMap().GetNode("ComponentEnable").SetValue(False)
-        cam.GetNodeMap().GetNode("PixelFormat").SetValue("Confidence16")
-        print("Image selector: Point cloud")
-    elif data_type == "Confidence_Map":
-        # Close 3d point cloud image
-        cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Range")
-        cam.GetNodeMap().GetNode("ComponentEnable").SetValue(False)
-        cam.GetNodeMap().GetNode("PixelFormat").SetValue("Coord3D_ABC32f")
-        # Close intensity image
-        cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Intensity")
-        cam.GetNodeMap().GetNode("ComponentEnable").SetValue(False)
-        cam.GetNodeMap().GetNode("PixelFormat").SetValue("Mono16")
-        # Open confidence map
-        cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Confidence")
-        cam.GetNodeMap().GetNode("ComponentEnable").SetValue(True)
-        cam.GetNodeMap().GetNode("PixelFormat").SetValue("Confidence16")
-        print("Image selector: Confidence Map")
-    else:
-        print("Wrong data type input of function config_tof_camera_para")
-
 def split_tof_container_data(container) -> dict:
     """
     Split the data component from the grab retrieve data container
@@ -148,86 +96,30 @@ def rawdepth_to_heatmap(rawdepth):
     # heatmap = cv2.applyColorMap(255 - gray_img, cv2.COLORMAP_JET)
     return heatmap
 
-def grab_one_point_cloud():
-    """
-    Grab one point cloud from camera.
-    Returns:
-        pcl: point cloud (unit : mm)
-    """
+def grab_one_intensity_depth():
     cam = create_tof_cam()
     cam.Open()
     config_tof_cam_para(cam)
-    config_tof_data_comp(cam, "Point_Cloud")
+    # Configure the data type of ToF camera
+    # Open 3d point cloud image
+    cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Range")
+    cam.GetNodeMap().GetNode("ComponentEnable").SetValue(True)
+    cam.GetNodeMap().GetNode("PixelFormat").SetValue("Coord3D_ABC32f")  # Coord3D_C16 / Coord3D_ABC32f
+    # Open intensity image
+    cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Intensity")
+    cam.GetNodeMap().GetNode("ComponentEnable").SetValue(True)
+    cam.GetNodeMap().GetNode("PixelFormat").SetValue("Mono16")
+    # Close confidence map
+    cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Confidence")
+    cam.GetNodeMap().GetNode("ComponentEnable").SetValue(False)
+    cam.GetNodeMap().GetNode("PixelFormat").SetValue("Confidence16")
 
     # Grab point cloud data
     grab_result = cam.GrabOne(1000)  # timeout: 1s
-    assert grab_result.GrabSucceeded(), "Failed to grab depth data"
+    assert grab_result.GrabSucceeded(), "Failed to grab ToF data"
     cam.Close()
-    return split_tof_container_data(grab_result.GetDataContainer())["Point_Cloud"]  # Unit: mm
-
-def grab_one_intensity():
-    cam = create_tof_cam()
-    cam.Open()
-    config_tof_cam_para(cam)
-    config_tof_data_comp(cam, "Intensity_Image")
-
-    # Grab point cloud data
-    grab_result = cam.GrabOne(1000)  # timeout: 1s
-    assert grab_result.GrabSucceeded(), "Failed to grab intensity data"
-    cam.Close()
-    return split_tof_container_data(grab_result.GetDataContainer())["Intensity_Image"]
-
-def stream_tof_img(img_type: str) -> None:
-    cam = create_tof_cam()
-    cam.Open()
-    config_tof_cam_para(cam)
-    if img_type == "Intensity_Image":
-        config_tof_data_comp(cam, "Intensity_Image")
-    elif img_type == "Confidence_Map":
-        config_tof_data_comp(cam, "Confidence_Map")
-    elif img_type == "Depth_Image":
-        config_tof_data_comp(cam, "Point_Cloud")
-    else:
-        raise Exception("Not supported image type")
-
-    # Starts the grabbing of data with strategy
-    cam.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
-    # print("Start grabbing ...")
-    while cam.IsGrabbing():
-        # Get the grab retrieve
-        grab_retrieve = cam.RetrieveResult(1000, pylon.TimeoutHandling_ThrowException)
-
-        if grab_retrieve.GrabSucceeded():
-            # Get the grab retrieve as data container
-            data_container = grab_retrieve.GetDataContainer()
-            # Split the container
-            data = split_tof_container_data(data_container)
-
-            if img_type == "Intensity_Image":
-                img= data["Intensity_Image"]
-                display_title = "Intensity_image"
-            elif img_type == "Confidence_Map":
-                img = data["Confidence_Map"]
-                display_title = "Confidence_map"
-            elif img_type == "Depth_Image":
-                img = rawdepth_to_heatmap(pcl_to_rawdepth(data["Point_Cloud"]))
-                display_title = "Depth_image"
-            else:
-                raise Exception("Not supported image type")
-
-            # Display
-            cv2.imshow(display_title, img)
-            grab_retrieve.Release()
-
-        # Read the keyboard keyin
-        key = cv2.waitKey(5) & 0xFF
-        # Break the loop by pressing q
-        if key == ord("q"):
-            break
-
-    cam.StopGrabbing()
-    cam.Close()
-    cv2.destroyAllWindows
+    result_container = split_tof_container_data(grab_result.GetDataContainer())
+    return result_container["Intensity_Image"], result_container["Point_Cloud"]
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Grab ToF camera data.')
@@ -238,20 +130,20 @@ def parse_args():
     return parser.parse_args()
 
 def main(intensity_img_path, depth_img_path, depth_heatmap_path) -> None:
-    # Stream the intensity image.
-    # print('Start streaming the ToF intensity images...')
-    # print('Press q to quit the stream.')
-    # stream_tof_img("Intensity_Image")
-    # Grab and save one intensity image.
-    intensity_img = grab_one_intensity()
-    print('Grab one intensity image.')
+
+    # Grab one ToF data
+    intensity_img, pcl = grab_one_intensity_depth()
+    depth_img = pcl_to_rawdepth(pcl)
+    # Save intensity image
     cv2.imwrite(intensity_img_path, intensity_img)
+    print(f'Saved {intensity_img_path}')
+    # Save depth image
     # Grab and save one depth image.
-    depth_img = pcl_to_rawdepth(grab_one_point_cloud())
-    print('Grab one depth image.')
     np.save(depth_img_path, depth_img)
+    print(f'Saved {depth_img_path}')
     # Save the depth heatmap
     cv2.imwrite(depth_heatmap_path, rawdepth_to_heatmap(depth_img))
+    print(f'Saved {depth_heatmap_path}')
 
 
 if __name__ == '__main__':
