@@ -1,8 +1,8 @@
 import subprocess
+import logging
 
 
-if __name__ == '__main__':
-    # Grab the intensity image and depth image from ToF camera.
+def run_tof_data_grab():
     subprocess.run(
         ['python',
          'tof_data_grab.py',
@@ -11,6 +11,12 @@ if __name__ == '__main__':
          '--depth',
          'result_tof_data/depth',
          '--heatmap',
-         'result_tof_data/heatmap.png',]
+         'result_tof_data/heatmap.png', ], check=True
     )
-    subprocess.run(['python', 'tof_data_grab.py'])
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    logging.info('Grabbing ToF data')
+    # Grab the intensity image and depth image from ToF camera.
+    run_tof_data_grab()
+    logging.info('Saved ToF data')
