@@ -239,9 +239,9 @@ def parse_args():
 
 def main(intensity_img_path, depth_img_path, depth_heatmap_path) -> None:
     # Stream the intensity image.
-    print('Start streaming the ToF intensity images...')
-    print('Press q to quit the stream.')
-    stream_tof_img("Intensity_Image")
+    # print('Start streaming the ToF intensity images...')
+    # print('Press q to quit the stream.')
+    # stream_tof_img("Intensity_Image")
     # Grab and save one intensity image.
     intensity_img = grab_one_intensity()
     print('Grab one intensity image.')
