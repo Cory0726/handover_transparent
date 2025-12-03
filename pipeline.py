@@ -1,22 +1,31 @@
 import subprocess
 import logging
 
+import cv2
 
-def run_tof_data_grab():
+
+def run_tof_data_grab_process():
     subprocess.run(
-        ['python',
-         'tof_data_grab.py',
-         '--intensity',
-         'result_tof_data/intensity.png',
-         '--depth',
-         'result_tof_data/depth',
-         '--heatmap',
-         'result_tof_data/heatmap.png', ], check=True
+        ['python', 'tof_data_grab.py',
+         '--intensity', 'data/tof_intensity.png',
+         '--depth', 'data/tof_depth',
+         '--heatmap', 'data/tof_depth_heatmap.png', ], check=True
     )
 
+def save_intensity_to_grayscale(img_path):
+    img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+    cv2.imwrite('data/tof_intensity_grayscale.png', img)
+
 if __name__ == '__main__':
+    # Initialize the log.
     logging.basicConfig(level=logging.INFO)
-    logging.info('Grabbing ToF data')
+
     # Grab the intensity image and depth image from ToF camera.
-    run_tof_data_grab()
+    logging.info('Grabbing ToF data...')
+    run_tof_data_grab_process()
     logging.info('Saved ToF data')
+
+    # Save intensity image to grayscale image.
+    save_intensity_to_grayscale('data/tof_intensity.png')
+
+    
