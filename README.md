@@ -3,13 +3,31 @@ My project for handover transparent object.
 
 ## System setup
 ```bash
+# python version
+# python 3.12.12
+
 # basler camera (ToF) API
 pip install pypylon
 
-# other
-pip install opencv-python
+# torch, torchvision
+pip install torch==2.9.0 torchvision==0.24.0 --index-url https://download.pytorch.org/whl/cu126
+# xformers
+pip3 install -U xformers --index-url https://download.pytorch.org/whl/cu126
+# OpenCV, tqdm, scikit-learn, addict
+pip install opencv-python, tqdm, scikit-learn, addict
+
+# depth-anything-3
+# Step1 : git clone https://github.com/ByteDance-Seed/Depth-Anything-3.git
+# Step2 : cd to the Depth-Anything-3 folder
+pip install -e .
+
+# triton
+# Install `triton` package for Windows system
+## Step 1 : Download the Windows `triton` package at the [**HuggingFace**](https://hf-mirror.com/madbuda/triton-windows-builds)
+## Step 2 : Install the `triton` package
+pip install triton-3.0.0-cp312-cp312-win_amd64.whl
 ```
 
 ## Script
 ### pipeline.py
-- tof_data_grab.py
+

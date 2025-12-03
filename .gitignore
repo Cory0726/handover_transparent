@@ -205,3 +205,7 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Files
+/u_net/Hand_Seg_EGTEA_plus_S640480G_Scale05_Score08994_20251123.pth
+triton-3.0.0-cp312-cp312-win_amd64.whl
