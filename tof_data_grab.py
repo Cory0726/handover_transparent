@@ -31,7 +31,6 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     """
     Configure a ToF camera (Basler blaze-101) parameter after opening the camera.
     """
-    print("ToF camera information:")
     # Operating mode: ShortRange: 0 - 1498 mm / LongRange: 0 - 9990 mm
     cam.OperatingMode.Value = "LongRange"
     # Exposure time (us)
@@ -39,8 +38,6 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     # Max depth / Min depth (mm)
     cam.DepthMax.Value = 1498
     cam.DepthMin.Value = 0
-    print(f"Operating mode: {cam.OperatingMode.Value} / Exposure time: {cam.ExposureTime.Value}\n")
-    print(f"Depth max: {cam.DepthMax.Value} / min: {cam.DepthMin.Value}")
     # Fast mode
     cam.FastMode.Value = True
     # Filter spatial
@@ -54,7 +51,8 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     cam.OutlierRemoval.Value = True
     # Confidence Threshold (0 - 65536)
     cam.ConfidenceThreshold.Value = 32
-    print(f"Confidence threshold: {cam.ConfidenceThreshold.Value}")
+    print(f"ToF cam INFO - Operating mode: {cam.OperatingMode.Value} / Exposure time: {cam.ExposureTime.Value} \
+    / Depth max: {cam.DepthMax.Value} / min: {cam.DepthMin.Value} / Confidence threshold: {cam.ConfidenceThreshold.Value}")
     # Gamma correction
     cam.GammaCorrection.Value = True
     # GenDC (Generic Data Container) is used to transmit multiple types of image data,such as depth,
