@@ -6,7 +6,7 @@ import cv2
 
 def run_tof_data_grab_process():
     subprocess.run(
-        ['python', 'tof_data_grab.py',
+        ['python', 'tof_cam/tof_data_grab.py',
          '--intensity', 'data/tof_intensity.png',
          '--depth', 'data/tof_depth',
          '--heatmap', 'data/tof_depth_heatmap.png', ], check=True
