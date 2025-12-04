@@ -2,7 +2,7 @@ import sys
 import subprocess
 import logging
 import cv2
-
+import numpy as np
 
 def run_tof_data_grab_process():
     subprocess.run(
@@ -27,7 +27,16 @@ def run_unet_predict_process():
          '--process', 'u_net/img_process_temp'], check=True
     )
 
-if __name__ == '__main__':
+def run_da3_predict_process():
+    subprocess.run(
+        ['python', 'da3/predict.py',
+         '--img', 'data/tof_intensity_grayscale.png',
+         '--depth', 'data/tof_depth.npy',
+         '--hand', 'data/unet_hand_mask.png',
+         '--output', 'data'], check=True
+    )
+
+def main():
     # Initialize the log.
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
@@ -43,6 +52,14 @@ if __name__ == '__main__':
     # ==================================================
     # U-Net hand segmentation
     # ==================================================
-    logging.info('Running U-Net model...')
-    run_unet_predict_process()
+    # logging.info('Running U-Net model...')
+    # run_unet_predict_process()
 
+    # ==================================================
+    # Depth-Anything-3
+    # ==================================================
+    logging.info('Running DA3 model...')
+    run_da3_predict_process()
+
+if __name__ == '__main__':
+    main()

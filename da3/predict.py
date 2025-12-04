@@ -20,13 +20,13 @@ def predict_da3_depth(da3_model, img):
     return raw_depth
 
 def calibrate_depth_ransac(
-    D_da3,                      # DA3 depth map, shape (H, W), meter
-    D_tof,                      # ToF depth map, shape (H, W), meter
+    D_da3,                      # DA3 depth map, shape (H, W), (mm)
+    D_tof,                      # ToF depth map, shape (H, W), mm
     mask,                       # Mask image, 255 = use pixel, 0 = ignore
     output_dir_path,
-    min_depth=0.2,             # Minimum valid depth (meter)
-    max_depth=0.6,              # Maximum valid depth (meter)
-    residual_threshold=0.001,    # RANSAC inlier threshold (meter)
+    min_depth=200,             # Minimum valid depth (mm)
+    max_depth=600,              # Maximum valid depth (mm)
+    residual_threshold=1,    # RANSAC inlier threshold (mm)
     min_samples=3000,            # Minimum valid samples for calibration
     max_trials=1000              # RANSAC iterations
 ):
@@ -36,7 +36,7 @@ def calibrate_depth_ransac(
         d_tof ≈ a * d_da3 + b
 
     Returns:
-        D_da3_calibrated : np.ndarray (H, W), calibrated DA3 depth (meter)
+        D_da3_calibrated : np.ndarray (H, W), calibrated DA3 depth (mm)
     """
 
     # Build valid-pixel mask
@@ -113,8 +113,9 @@ def main(input_img_file, tof_depth_file, hand_seg_mask_file, output_dir_path):
     img = cv2.imread(input_img_file, cv2.IMREAD_GRAYSCALE)
     print('Original image for DA3 predict : ' + array_info(img))
     # Predicted raw depth
-    predicted_depth = predict_da3_depth(model, img)
-    print('Predicted depth by DA3 model : ' + array_info(predicted_depth))
+    # predicted_depth = predict_da3_depth(model, img)
+    predicted_depth = predict_da3_depth(model, img) * 1000  # Unit : mm
+    print('Predicted depth by DA3 model : ' + array_info(predicted_depth) + '(mm)')
     # Save the predicted depth as .npy
     save_file_name = f'{output_dir_path}/da3_predicted_depth'
     np.save(save_file_name, predicted_depth)
@@ -128,14 +129,14 @@ def main(input_img_file, tof_depth_file, hand_seg_mask_file, output_dir_path):
     # Calibrate the predicted raw depth with ToF raw depth and Hand Segmentation mask
     # ==================================================
     # Load the ToF raw depth
-    tof_depth = (np.load(tof_depth_file) / 1000)  # Unit : m
-    print('ToF raw depth : ' + array_info(tof_depth))
+    tof_depth = np.load(tof_depth_file)  # Unit : mm
+    print('ToF raw depth : ' + array_info(tof_depth) + '(mm)')
     # Load the mask of hand segmentation
     hand_seg_mask = cv2.imread(hand_seg_mask_file, cv2.IMREAD_UNCHANGED)  # [255, 0]
     print('Hand Seg mask : ' + array_info(hand_seg_mask))
     # Calibrate the predicted raw depth
-    calibrate_depth = calibrate_depth_ransac(predicted_depth, tof_depth, hand_seg_mask, output_dir_path) * 1000  # Unit : mm
-    print('Calibrated depth : ' + array_info(calibrate_depth))
+    calibrate_depth = calibrate_depth_ransac(predicted_depth, tof_depth, hand_seg_mask, output_dir_path)  # Unit : mm
+    print('Calibrated depth : ' + array_info(calibrate_depth) + '(mm)')
     # Save the calibrated depth as .npy
     np.save(f'{output_dir_path}/da3_cal_depth', calibrate_depth)
     print(f'Save : {output_dir_path}/da3_cal_depth')
@@ -155,10 +156,4 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    main(
-        input_img_file='tof_intensity_grayscale.png',
-        tof_depth_file='tof_depth.npy',
-        hand_seg_mask_file='unet_hand_mask.png',
-        output_depth_file='da3_predicted_depth.npy'
-    )
-
+    main(args.img, args.depth, args.hand, args.output)
