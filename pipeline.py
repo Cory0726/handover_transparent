@@ -32,8 +32,14 @@ def run_da3_predict_process():
         ['python', 'da3/predict.py',
          '--img', 'data/tof_intensity_grayscale.png',
          '--depth', 'data/tof_depth.npy',
-         '--hand', 'data/unet_hand_mask.png',
-         '--output', 'data'], check=True
+         '--hand', 'data/unet_hand_mask.png'], check=True
+    )
+
+def run_transcg_predict_process():
+    subprocess.run(
+        ['python', 'transcg/predict.py',
+         '--img', 'data/tof_intensity_grayscale.png',
+         '--depth', 'data/da3_cal_depth.npy'], check=True
     )
 
 def main():
@@ -52,14 +58,21 @@ def main():
     # ==================================================
     # U-Net hand segmentation
     # ==================================================
-    # logging.info('Running U-Net model...')
-    # run_unet_predict_process()
+    logging.info('Running U-Net model...')
+    run_unet_predict_process()
 
     # ==================================================
     # Depth-Anything-3
     # ==================================================
-    logging.info('Running DA3 model...')
-    run_da3_predict_process()
+    # logging.info('Running DA3 model...')
+    # run_da3_predict_process()
+
+    # ==================================================
+    # TransCG
+    # ==================================================
+    # logging.info('Running TransCG model...')
+    # run_transcg_predict_process()
+
 
 if __name__ == '__main__':
     main()

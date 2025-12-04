@@ -23,7 +23,6 @@ def calibrate_depth_ransac(
     D_da3,                      # DA3 depth map, shape (H, W), (mm)
     D_tof,                      # ToF depth map, shape (H, W), mm
     mask,                       # Mask image, 255 = use pixel, 0 = ignore
-    output_dir_path,
     min_depth=200,             # Minimum valid depth (mm)
     max_depth=600,              # Maximum valid depth (mm)
     residual_threshold=1,    # RANSAC inlier threshold (mm)
@@ -46,7 +45,7 @@ def calibrate_depth_ransac(
         (D_da3 > min_depth) & (D_da3 < max_depth) &
         (D_tof > min_depth) & (D_tof < max_depth)
     )
-    save_file_name = f'{output_dir_path}/da3_valid_pixel_mask.png'
+    save_file_name = 'data/da3_valid_pixel_mask.png'
     cv2.imwrite(save_file_name, valid.astype(np.uint8) * 255)
     print(f'Saved {save_file_name}')
     # Check the number of valid pixels
@@ -96,7 +95,7 @@ def depth_to_color(depth):
     depth_color = cv2.applyColorMap(depth_8u, cv2.COLORMAP_JET)
     return depth_color
 
-def main(input_img_file, tof_depth_file, hand_seg_mask_file, output_dir_path):
+def main(input_img_file, tof_depth_file, hand_seg_mask_file):
     """
     Predict Depth-anything 3 depth with RANSAC calibration.
     :param input_img_file: Path to grayscale or intensity input image for DA3 prediction.
@@ -117,11 +116,11 @@ def main(input_img_file, tof_depth_file, hand_seg_mask_file, output_dir_path):
     predicted_depth = predict_da3_depth(model, img) * 1000  # Unit : mm
     print('Predicted depth by DA3 model : ' + array_info(predicted_depth) + '(mm)')
     # Save the predicted depth as .npy
-    save_file_name = f'{output_dir_path}/da3_predicted_depth'
+    save_file_name = 'data/da3_predicted_depth'
     np.save(save_file_name, predicted_depth)
     print(f'Saved : {save_file_name}')
     # Save the predicted depth heatmap
-    save_file_name = f'{output_dir_path}/da3_predicted_depth_heatmap.png'
+    save_file_name = 'data/da3_predicted_depth_heatmap.png'
     cv2.imwrite(save_file_name, depth_to_color(predicted_depth))
     print(f'Saved : {save_file_name}')
 
@@ -135,13 +134,13 @@ def main(input_img_file, tof_depth_file, hand_seg_mask_file, output_dir_path):
     hand_seg_mask = cv2.imread(hand_seg_mask_file, cv2.IMREAD_UNCHANGED)  # [255, 0]
     print('Hand Seg mask : ' + array_info(hand_seg_mask))
     # Calibrate the predicted raw depth
-    calibrate_depth = calibrate_depth_ransac(predicted_depth, tof_depth, hand_seg_mask, output_dir_path)  # Unit : mm
+    calibrate_depth = calibrate_depth_ransac(predicted_depth, tof_depth, hand_seg_mask)  # Unit : mm
     print('Calibrated depth : ' + array_info(calibrate_depth) + '(mm)')
     # Save the calibrated depth as .npy
-    np.save(f'{output_dir_path}/da3_cal_depth', calibrate_depth)
-    print(f'Save : {output_dir_path}/da3_cal_depth')
+    np.save('data/da3_cal_depth', calibrate_depth)
+    print(f'Save : data/da3_cal_depth')
     # Save the calibrated depth heatmap
-    save_file_name = f'{output_dir_path}/da3_cal_depth_heatmap.png'
+    save_file_name = 'data/da3_cal_depth_heatmap.png'
     cv2.imwrite(save_file_name, depth_to_color(calibrate_depth))
     print(f'Saved : {save_file_name}')
 
@@ -150,10 +149,9 @@ def parse_args():
     parser.add_argument('--img', type=str)
     parser.add_argument('--depth', type=str)
     parser.add_argument('--hand', type=str)
-    parser.add_argument('--output', type=str)
     parser.parse_args()
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_args()
-    main(args.img, args.depth, args.hand, args.output)
+    main(args.img, args.depth, args.hand)
