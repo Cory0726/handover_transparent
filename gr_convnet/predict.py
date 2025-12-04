@@ -42,7 +42,7 @@ def main(depth_path, mask_path):
     cv2.imwrite('data/grconv_ang_img.png', vis_heatmap(ang_img))
     cv2.imwrite('data/grconv_width_img.png', vis_heatmap(width_img))
     # Plot the grasp rectangle on the depth image
-    fig, final_grasps= plot_depth_with_grasp(crop_depth_img, q_img, ang_img, width_img, no_grasps=3)
+    fig, final_grasps= plot_depth_with_grasp(crop_depth_img, q_img, ang_img, width_img, no_grasps=1)
     fig.savefig('data/grconv_grasp_result.pdf')
 
     for i in range(3):
