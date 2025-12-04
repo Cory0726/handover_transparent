@@ -106,7 +106,7 @@ def keep_largest_component(mask: np.ndarray) -> np.ndarray:
 
     return largest_mask
 
-def main(input_img_path, output_img_path, model_path, img_process_dir):
+def main(input_img_path, output_img_path, model_path):
     # Load image
     img = Image.open(input_img_path)
 
@@ -133,8 +133,8 @@ def main(input_img_path, output_img_path, model_path, img_process_dir):
         )
 
         # Save images and masks at different brightness levels
-        temp_img_path = f'{img_process_dir}/img_brightness_{int(b*100):3d}.png'
-        temp_mask_path = f'{img_process_dir}/mask_brightness_{int(b*100):3d}.png'
+        temp_img_path = f'u_net/img_process_temp/img_brightness_{int(b*100):3d}.png'
+        temp_mask_path = f'u_net/img_process_temp/mask_brightness_{int(b*100):3d}.png'
         img_bright.save(temp_img_path)
         # print(f'Saved: {temp_img_path}')
         result_mask.save(temp_mask_path)
@@ -159,11 +159,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='U-Net segmentation model')
     parser.add_argument('--input', type=str)
     parser.add_argument('--output', type=str)
-    parser.add_argument('--model', type=str)
-    parser.add_argument('--process', type=str)
     parser.parse_args()
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_args()
-    main(args.input, args.output, args.model, args.process)
+    main(args.input, args.output, 'u_net/Hand_Seg_EGTEA_plus_S640480G_Scale05_Score08994_20251123.pth')
