@@ -124,7 +124,6 @@ def parse_args():
     parser.add_argument('--intensity', type=str)
     parser.add_argument('--depth', type=str)
     parser.add_argument('--heatmap', type=str)
-    parser.parse_args()
     return parser.parse_args()
 
 def main(intensity_img_path, depth_img_path, depth_heatmap_path) -> None:

@@ -52,10 +52,9 @@ def main(img_path, depth_path):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='U-Net segmentation model')
+    parser = argparse.ArgumentParser(description='TransCG model')
     parser.add_argument('--img', type=str)
     parser.add_argument('--depth', type=str)
-    parser.parse_args()
     return parser.parse_args()
 
 

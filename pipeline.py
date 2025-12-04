@@ -40,6 +40,13 @@ def run_transcg_predict_process():
          '--depth', 'data/da3_cal_depth.npy'], check=True
     )
 
+def run_gr_convnet_predict_process():
+    subprocess.run(
+        ['python', 'gr_convnet/predict.py',
+         '--depth', 'data/da3_cal_depth.npy',
+         '--mask', 'data/unet_hand_mask.png'], check=True
+    )
+
 def main():
     # Initialize the log.
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
@@ -56,8 +63,8 @@ def main():
     # ==================================================
     # U-Net hand segmentation
     # ==================================================
-    logging.info('Running U-Net model...')
-    run_unet_predict_process()
+    # logging.info('Running U-Net model...')
+    # run_unet_predict_process()
 
     # ==================================================
     # Depth-Anything-3
@@ -70,6 +77,12 @@ def main():
     # ==================================================
     # logging.info('Running TransCG model...')
     # run_transcg_predict_process()
+
+    # ==================================================
+    # GR-ConvNet
+    # ==================================================
+    logging.info('Running GR-ConvNet model...')
+    run_gr_convnet_predict_process()
 
 
 if __name__ == '__main__':

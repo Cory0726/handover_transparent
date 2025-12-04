@@ -159,7 +159,6 @@ def parse_args():
     parser = argparse.ArgumentParser(description='U-Net segmentation model')
     parser.add_argument('--input', type=str)
     parser.add_argument('--output', type=str)
-    parser.parse_args()
     return parser.parse_args()
 
 if __name__ == '__main__':

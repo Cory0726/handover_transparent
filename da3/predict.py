@@ -145,11 +145,10 @@ def main(input_img_file, tof_depth_file, hand_seg_mask_file):
     print(f'Saved : {save_file_name}')
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='U-Net segmentation model')
+    parser = argparse.ArgumentParser(description='Depth-Anythin-3 model')
     parser.add_argument('--img', type=str)
     parser.add_argument('--depth', type=str)
     parser.add_argument('--hand', type=str)
-    parser.parse_args()
     return parser.parse_args()
 
 if __name__ == '__main__':

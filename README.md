@@ -13,8 +13,8 @@ pip install pypylon
 pip install torch==2.9.0 torchvision==0.24.0 --index-url https://download.pytorch.org/whl/cu126
 # xformers
 pip3 install -U xformers --index-url https://download.pytorch.org/whl/cu126
-# OpenCV, tqdm, scikit-learn, addict
-pip install opencv-python, tqdm, scikit-learn, addict
+# OpenCV, tqdm, scikit-learn, scikit-image, addict
+pip install opencv-python, tqdm, scikit-learn, scikit-image, addict
 
 # depth-anything-3
 # Step1 : git clone https://github.com/ByteDance-Seed/Depth-Anything-3.git
