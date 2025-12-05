@@ -50,9 +50,10 @@ def main(depth_path, mask_path):
     cv2.imwrite('data/grconv_ang_img.png', vis_heatmap(ang_img))
     cv2.imwrite('data/grconv_width_img.png', vis_heatmap(width_img))
     # Plot the grasp rectangle on the depth image
-    fig, grasp= plot_depth_with_grasp(crop_depth,crop_mask, q_img, ang_img, width_img, no_grasps=5)
+    fig, grasp= plot_depth_with_grasp(crop_depth,crop_mask, q_img, ang_img, width_img, no_grasps=1)
     grasp_depth = crop_depth[grasp.center[0], grasp.center[1]]
-    print(f'Grasp depth : {grasp_depth}')
+    print(f'Q max: {q_img.max()}, Q min: {q_img.min()}')
+    print(f'Grasp depth : {grasp_depth} mm')
     fig.savefig('data/grconv_grasp_result.pdf')
     print('Saved : data/grconv_grasp_result.pdf')
     final_grasp = {
@@ -64,6 +65,7 @@ def main(depth_path, mask_path):
     with open('data/grconv_grasp_result.json', 'w') as f:
         json.dump(final_grasp, f, indent=4)
         print('Saved : data/grconv_grasp_result.json')
+
 def parse_args():
     parser = argparse.ArgumentParser(description='GR-ConvNet model')
     parser.add_argument('--depth', type=str)
