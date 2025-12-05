@@ -84,6 +84,5 @@ def main():
     logging.info('Running GR-ConvNet model...')
     run_gr_convnet_predict_process()
 
-
 if __name__ == '__main__':
     main()

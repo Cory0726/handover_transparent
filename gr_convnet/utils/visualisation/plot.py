@@ -194,7 +194,7 @@ def save_results(rgb_img, grasp_q_img, grasp_angle_img, depth_img=None, no_grasp
     fig.canvas.draw()
     plt.close(fig)
 
-def plot_depth_with_grasp(depth_img, grasp_q_img, grasp_angle_img, grasp_width_img=None, no_grasps=1):
+def plot_depth_with_grasp(depth_img,mask_img, grasp_q_img, grasp_angle_img, grasp_width_img=None, no_grasps=1):
     """
     Show depth image with predicted grasp rectangles overlaid.
     """
@@ -212,9 +212,11 @@ def plot_depth_with_grasp(depth_img, grasp_q_img, grasp_angle_img, grasp_width_i
     ax.set_title("Depth + Grasp")
     ax.axis('off')
 
-    # 4. Draw grasp rectangles
+    # 4. Draw grasp rectangles, filter the grasp point in hand area
     for g in gs:
-        print(f'Grasp center: {g.center}, angle: {g.angle}, width: {g.width}')
-        g.plot(ax)
+        if not (mask_img[g.center[0], g.center[1]] == 255):
+            print(f'Grasp center: {g.center}, angle: {g.angle} rad, width: {g.width} mm')
+            g.plot(ax)
+            break
 
-    return fig, gs
+    return fig, g
