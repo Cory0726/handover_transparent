@@ -24,6 +24,7 @@ def main(depth_path, mask_path):
     # ==================================================
     depth_data = CameraData()
     x, crop_depth = depth_data.get_data(depth)
+    print(f'Crop depth : {crop_depth.shape}, {crop_depth.dtype}, {crop_depth.max()}, {crop_depth.min()}')
     x = x.unsqueeze(0)  # Increase the dimension of batch
     mask_data = CameraData()
     _, crop_mask = mask_data.get_data(mask)
@@ -50,10 +51,13 @@ def main(depth_path, mask_path):
     cv2.imwrite('data/grconv_width_img.png', vis_heatmap(width_img))
     # Plot the grasp rectangle on the depth image
     fig, grasp= plot_depth_with_grasp(crop_depth,crop_mask, q_img, ang_img, width_img, no_grasps=5)
+    grasp_depth = crop_depth[grasp.center[0], grasp.center[1]]
+    print(f'Grasp depth : {grasp_depth}')
     fig.savefig('data/grconv_grasp_result.pdf')
     print('Saved : data/grconv_grasp_result.pdf')
     final_grasp = {
-        'center' : [float(grasp.center[0]), float(grasp.center[1])],
+        'center' : [int(grasp.center[0]), int(grasp.center[1])],
+        'depth' : float(grasp_depth),
         'angle' : float(grasp.angle),
         'width' : float(grasp.width),
     }
