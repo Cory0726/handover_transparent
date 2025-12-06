@@ -214,9 +214,13 @@ def plot_depth_with_grasp(depth_img,mask_img, grasp_q_img, grasp_angle_img, gras
 
     # 4. Draw grasp rectangles, filter the grasp point in hand area
     for g in gs:
+        q_score = grasp_q_img[g.center[0], g.center[1]]
+        temp_h, temp_w = g.center
+        temp_w = temp_w + 80
+        g.center = (temp_h, temp_w)
         if not (mask_img[g.center[0], g.center[1]] == 255):
-            print(f'Grasp center: {g.center}, angle: {g.angle} rad, width: {g.width} mm,' \
-              f'q score: {grasp_q_img[g.center[0], g.center[1]]}')
+            print(f'Grasp center: {(g.center[0], g.center[1])}, angle: {g.angle} rad, width: {g.width} mm,' \
+              f'q score: {q_score}')
             g.plot(ax)
             break
 
