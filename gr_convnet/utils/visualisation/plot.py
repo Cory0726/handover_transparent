@@ -216,7 +216,8 @@ def plot_depth_with_grasp(depth_img,mask_img, grasp_q_img, grasp_angle_img, gras
     for g in gs:
         q_score = grasp_q_img[g.center[0], g.center[1]]
         temp_h, temp_w = g.center
-        temp_w = temp_w + 80
+        temp_h = temp_h + 128
+        temp_w = temp_w + 208
         g.center = (temp_h, temp_w)
         if not (mask_img[g.center[0], g.center[1]] == 255):
             print(f'Grasp center: {(g.center[0], g.center[1])}, angle: {g.angle} rad, width: {g.width} mm,' \

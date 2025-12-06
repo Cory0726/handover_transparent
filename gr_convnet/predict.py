@@ -22,11 +22,12 @@ def main(depth_path, mask_path):
     # ==================================================
     # Pre-process the data
     # ==================================================
-    depth_data = CameraData()
+    crop_size = 224  # crop_size = 224
+    depth_data = CameraData(output_size=crop_size)
     x, crop_depth = depth_data.get_data(depth)
     print(f'Crop depth : {crop_depth.shape}, {crop_depth.dtype}, {crop_depth.max()}, {crop_depth.min()}')
     x = x.unsqueeze(0)  # Increase the dimension of batch
-    mask_data = CameraData()
+    mask_data = CameraData(output_size=crop_size)
     _, crop_mask = mask_data.get_data(mask)
     # ==================================================
     # Predict stage
@@ -40,7 +41,7 @@ def main(depth_path, mask_path):
     with torch.no_grad():
         xc = x.to(device)
         pred = net.predict(xc)
-    q_img, ang_img, width_img = post_process_output(pred['pos'], pred['cos'], pred['sin'], pred['width'])
+    q_img, ang_img, width_img = post_process_output(pred['pos'], pred['cos'], pred['sin'], pred['width'], crop_size)
     # ==================================================
     # Save the result
     # ==================================================
