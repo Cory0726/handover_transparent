@@ -135,18 +135,7 @@ def get_T_cam_grasp():
     cam_y = (v - cy) * z / fy
     cam_z = z
     # # Generate the transformation metrix
-    # T_cam_grasp = pose_to_matrix(cam_x, cam_y, cam_z, 0, 0, angle)
-    # cam_p = np.array(
-    #     [cam_x,
-    #     cam_y,
-    #     cam_z,
-    #     1]
-    # )
-    # print(cam_p)
-
-
-
-
+    return pose_to_matrix(cam_x, cam_y, cam_z, 0, 0, -angle)
 
 def get_T_flange_cam():
     # Load the file
@@ -159,8 +148,7 @@ def get_T_flange_cam():
     ry = flange_in_cam['ry']
     rz = flange_in_cam['rz']
     # Create the transformation matrix
-    T_flange_cam = invert_transform(pose_to_matrix(x, y, z, rx, ry, rz))
-    return  T_flange_cam
+    return invert_transform(pose_to_matrix(x, y, z, rx, ry, rz))
 
 
 if __name__ == '__main__':
