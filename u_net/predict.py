@@ -164,3 +164,4 @@ def parse_args():
 if __name__ == '__main__':
     args = parse_args()
     main(args.input, args.output, 'u_net/Hand_Seg_EGTEA_plus_S640480G_Scale05_Score08994_20251123.pth')
+    # main(args.input, args.output, 'u_net/Hand_Seg_EGTEA_plus_S640480G_Scale10_Score08954_Epoch20_20251207.pth')

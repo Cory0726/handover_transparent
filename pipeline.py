@@ -63,8 +63,8 @@ def main():
     # ==================================================
     # U-Net hand segmentation
     # ==================================================
-    # logging.info('Running U-Net model...')
-    # run_unet_predict_process()
+    logging.info('Running U-Net model...')
+    run_unet_predict_process()
 
     # ==================================================
     # Depth-Anything-3
@@ -82,7 +82,7 @@ def main():
     # GR-ConvNet
     # ==================================================
     # logging.info('Running GR-ConvNet model...')
-    run_gr_convnet_predict_process()
+    # run_gr_convnet_predict_process()
 
 if __name__ == '__main__':
     main()
