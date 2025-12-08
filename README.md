@@ -26,6 +26,9 @@ pip install -e .
 ## Step 1 : Download the Windows `triton` package at the [**HuggingFace**](https://hf-mirror.com/madbuda/triton-windows-builds)
 ## Step 2 : Install the `triton` package
 pip install triton-3.0.0-cp312-cp312-win_amd64.whl
+
+# techmanpy
+pip install techmanpy
 ```
 
 ## Script
