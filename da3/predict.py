@@ -1,11 +1,13 @@
 
 import argparse
-import glob, os, torch
+import torch
 import cv2
 import numpy as np
 from depth_anything_3.api import DepthAnything3
-from img_processing import array_info
 from sklearn.linear_model import LinearRegression, RANSACRegressor
+
+def array_info(arr):
+    return f'Shape{arr.shape}, Max: {arr.max():f}, Min: {arr.min():f}, Avg: {arr.mean():f}, {arr.dtype}'
 
 def da3_model_initial():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

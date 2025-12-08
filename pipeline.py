@@ -2,7 +2,6 @@ import sys
 import subprocess
 import logging
 import cv2
-import numpy as np
 
 def run_tof_data_grab_process():
     subprocess.run(

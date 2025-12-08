@@ -33,4 +33,10 @@ pip install techmanpy
 
 ## Script
 ### pipeline.py
+#### Flow
+1. `tof_cam/tof_data_grab.py`
+2. `u_net/preditct.py`
+3. `da3/predict.py`
+4. `gr_convnet/preditct.py`
+
 
