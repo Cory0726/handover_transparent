@@ -100,7 +100,7 @@ def matrix_to_pose(T):
     # Convert radians back to degrees
     rx, ry, rz = map(np.rad2deg, [rx, ry, rz])
 
-    return x, y, z, rx, ry, rz
+    return [x, y, z, rx, ry, rz]
 
 def invert_transform(T):
     """
@@ -133,7 +133,7 @@ def get_T_cam_grasp():
     v, u = grasp_result_data['center']  # unit: pixel
     z = grasp_result_data['depth']  # unit: mm
     angle = math.degrees(grasp_result_data['angle'])  # unit: degree
-    width = grasp_result_data['width']  # unit: mm
+    # width = grasp_result_data['width']  # unit: mm
     # Transform the grasp point into tof camera frame
     cam_x = (u - cx) * z / fx  # unit: mm
     cam_y = (v - cy) * z / fy
@@ -154,10 +154,21 @@ def get_T_flange_cam():
     # Create the transformation matrix
     return invert_transform(pose_to_matrix(x, y, z, rx, ry, rz))
 
+def get_pose_flange_grasp():
+    T_flage_grasp = get_T_flange_cam() @ get_T_cam_grasp()
+    return matrix_to_pose(T_flage_grasp)
+
+def get_pose_tool_grasp():
+    tool_size = 220  # unit: mm
+    pose_flange_grasp = get_pose_flange_grasp()
+    pose_flange_grasp[2] = pose_flange_grasp[2] - tool_size
+    return pose_flange_grasp
+
 
 if __name__ == '__main__':
+    # pose = get_pose_flange_grasp()
+    # print(type(pose), pose)
+    # pose_tool = get_pose_tool_grasp()
+    # print(type(pose_tool), pose_tool)
     tmr = TMRobot('192.168.50.49')
-    print(tmr.query_tm_data())
-    # tmr.gripper_close()
-    # tmr.move2target_ptp([-404.3503, -15.34856, 623.3129, -175.9127, 49.60438, 23.78037])
-    # print(tmr.query_tm_data())
+
