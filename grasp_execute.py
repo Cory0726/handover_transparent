@@ -158,5 +158,6 @@ def get_T_flange_cam():
 if __name__ == '__main__':
     tmr = TMRobot('192.168.50.49')
     print(tmr.query_tm_data())
-    tmr.move2target([-404.3503, -15.34856, 623.3129, -175.9127, 49.60438, 23.78037])
+    # tmr.gripper_close()
+    # tmr.move2target_ptp([-404.3503, -15.34856, 623.3129, -175.9127, 49.60438, 23.78037])
     # print(tmr.query_tm_data())
