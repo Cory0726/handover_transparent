@@ -2,6 +2,8 @@ import sys
 import subprocess
 import logging
 import cv2
+import estimate_grasp_pose
+from techman_tools.robot_control import TMRobot
 
 def run_tof_data_grab_process():
     subprocess.run(
@@ -59,29 +61,25 @@ def main():
     # Save intensity image to grayscale image.
     # save_intensity_to_grayscale('data/tof_intensity.png')
 
-    # ==================================================
     # U-Net hand segmentation
-    # ==================================================
     logging.info('Running U-Net model...')
     run_unet_predict_process()
 
-    # ==================================================
     # Depth-Anything-3
-    # ==================================================
     # logging.info('Running DA3 model...')
     # run_da3_predict_process()
 
-    # ==================================================
     # TransCG
-    # ==================================================
     # logging.info('Running TransCG model...')
     # run_transcg_predict_process()
 
-    # ==================================================
     # GR-ConvNet
-    # ==================================================
     # logging.info('Running GR-ConvNet model...')
     # run_gr_convnet_predict_process()
+
+    # ==================================================
+    # Execute grasp
+    # ==================================================
 
 if __name__ == '__main__':
     main()

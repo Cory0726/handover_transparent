@@ -1,11 +1,7 @@
 import json
 import numpy as np
 import math
-from techman_tools.robot_control import TMRobot
 
-def save_json(file_path, data):
-  with open(file_path, 'w') as f:
-    json.dump(data, f, indent=4)
 
 def pose_to_matrix(x, y, z, rx, ry, rz):
     """
@@ -164,11 +160,19 @@ def get_pose_tool_grasp():
     pose_flange_grasp[2] = pose_flange_grasp[2] - tool_size
     return pose_flange_grasp
 
+def run():
+    grasp_pose = get_pose_tool_grasp()
+    grasp_pose_dict = {
+        'x': grasp_pose[0],
+        'y': grasp_pose[1],
+        'z': grasp_pose[2],
+        'rx': grasp_pose[3],
+        'ry': grasp_pose[4],
+        'rz': grasp_pose[5]
+    }
+    with open('data/grasp_estimate_pose.json', 'w') as f:
+        json.dump(grasp_pose_dict, f, indent=4)
+    return grasp_pose
 
 if __name__ == '__main__':
-    # pose = get_pose_flange_grasp()
-    # print(type(pose), pose)
-    # pose_tool = get_pose_tool_grasp()
-    # print(type(pose_tool), pose_tool)
-    tmr = TMRobot('192.168.50.49')
-
+    run()
