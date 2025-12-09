@@ -1,7 +1,7 @@
 import json
 import numpy as np
 import math
-import techman_tools.robot_control as tmr
+from techman_tools.robot_control import TMRobot
 
 def save_json(file_path, data):
   with open(file_path, 'w') as f:
@@ -156,4 +156,7 @@ def get_T_flange_cam():
 
 
 if __name__ == '__main__':
-    param = tmr.query_tm_data('192.168.50.49')
+    tm_robot = TMRobot('192.168.50.49')
+    tm_robot.gripper_close()
+    param = tm_robot.query_tm_data()
+    print(param)
