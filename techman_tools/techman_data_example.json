@@ -1,0 +1,119 @@
+{
+    "Robot_Link": 1,
+    "Robot_Error": false,
+    "Project_Run": true,
+    "Project_Pause": false,
+    "Safeguard_A": false,
+    "ESTOP": false,
+    "Camera_Light": 0,
+    "Error_Code": 0,
+    "Joint_Angle": [
+        199.8212,
+        -8.131722,
+        70.00718,
+        -21.37796,
+        88.75852,
+        267.5802
+    ],
+    "Coord_Robot_Flange": [
+        -404.3478,
+        -15.34894,
+        623.3153,
+        -175.9121,
+        49.60471,
+        23.78075
+    ],
+    "Coord_Robot_Tool": [
+        -404.3478,
+        -15.34894,
+        623.3153,
+        -175.9121,
+        49.60471,
+        23.78075
+    ],
+    "TCP_Force": [
+        0,
+        0,
+        0
+    ],
+    "TCP_Force3D": 0,
+    "TCP_Speed": [
+        -8.712805e-34,
+        -8.168255e-34,
+        -4.356401e-32,
+        5.4357e-33,
+        -1.484459e-32,
+        3.6563e-35
+    ],
+    "TCP_Speed3D": 0,
+    "Joint_Speed": [
+        0.0003564356,
+        -0.0003564356,
+        0,
+        0,
+        0,
+        0
+    ],
+    "Joint_Torque": [
+        2257.35,
+        -25209.6,
+        -26391.3,
+        -7672.32,
+        -336.96,
+        -466.56
+    ],
+    "Project_Speed": 5,
+    "MA_Mode": 2,
+    "Robot_Light": 6,
+    "Ctrl_DO0": 0,
+    "Ctrl_DO1": 0,
+    "Ctrl_DO2": 0,
+    "Ctrl_DO3": 0,
+    "Ctrl_DO4": 0,
+    "Ctrl_DO5": 0,
+    "Ctrl_DO6": 0,
+    "Ctrl_DO7": 0,
+    "Ctrl_DI0": 0,
+    "Ctrl_DI1": 0,
+    "Ctrl_DI2": 0,
+    "Ctrl_DI3": 0,
+    "Ctrl_DI4": 0,
+    "Ctrl_DI5": 0,
+    "Ctrl_DI6": 0,
+    "Ctrl_DI7": 0,
+    "Ctrl_AO0": 0,
+    "Ctrl_AI0": 0,
+    "Ctrl_AI1": 0,
+    "End_DO0": 0,
+    "End_DO1": 0,
+    "End_DO2": 0,
+    "End_DO3": 0,
+    "End_DI0": 1,
+    "End_DI1": 0,
+    "End_DI2": 0,
+    "End_AI0": 2.22,
+    "Joint_Torque_Average": [
+        2332.596,
+        -25301.51,
+        -26305.96,
+        -7661.304,
+        -322.704,
+        -448.4161
+    ],
+    "Joint_Torque_Min": [
+        2257.35,
+        -25472.2,
+        -26391.3,
+        -7750.08,
+        -414.72,
+        -570.24
+    ],
+    "Joint_Torque_Max": [
+        2407.84,
+        -25078.3,
+        -26128.7,
+        -7568.64,
+        -259.2,
+        -362.88
+    ]
+}

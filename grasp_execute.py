@@ -1,7 +1,11 @@
 import json
-import cv2
 import numpy as np
 import math
+import techman_tools.robot_control as tmr
+
+def save_json(file_path, data):
+  with open(file_path, 'w') as f:
+    json.dump(data, f, indent=4)
 
 def pose_to_matrix(x, y, z, rx, ry, rz):
     """
@@ -152,4 +156,4 @@ def get_T_flange_cam():
 
 
 if __name__ == '__main__':
-    get_T_cam_grasp()
+    param = tmr.query_tm_data('192.168.50.49')
