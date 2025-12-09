@@ -10,6 +10,10 @@ async def set_params(robot_ip, params):
     async with techmanpy.connect_svr(robot_ip=robot_ip) as conn:
         await conn.set_values(params)
 
+async def motion(robot_ip, target_point, vel, acc):
+    async with techmanpy.connect_sct(robot_ip=robot_ip) as conn:
+        await conn.move_to_point_path(target_point, vel, acc)  # velocity(mm/s), acceleration(ms)
+
 class TMRobot:
     def __init__(self, robot_ip):
         self.robot_ip = robot_ip
@@ -25,3 +29,10 @@ class TMRobot:
     def gripper_open(self):
         params = {'End_DO0':False}
         asyncio.run(set_params(self.robot_ip,params))
+
+    def set_robot_speed(self, robot_speed):
+        params = {'Project_Speed':robot_speed}
+        asyncio.run(set_params(self.robot_ip,params))
+
+    def move2target(self, target_point):
+        asyncio.run(motion(self.robot_ip, target_point, 100, 200))

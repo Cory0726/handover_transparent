@@ -42,3 +42,7 @@ pip install techmanpy
 To verify that your connection with the robot is all set-up.
 ### test_recv_data.py
 Create a simple socket client to listen to the TMFlow server broadcast. To verify that your robot setting is correctly.
+### robot_control.py
+- Ref **library** :
+  - [TMFlow Server](https://github.com/jvdtoorn/techmanpy/wiki/TMFlow-Server)
+  - [External Script](https://github.com/jvdtoorn/techmanpy/wiki/External-Script)
