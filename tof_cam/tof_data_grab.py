@@ -50,7 +50,7 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     # Outlier removal
     cam.OutlierRemoval.Value = True
     # Confidence Threshold (0 - 65536)
-    cam.ConfidenceThreshold.Value = 32
+    cam.ConfidenceThreshold.Value = 32  # 32 or 3680
     print(f"ToF cam INFO - Operating mode: {cam.OperatingMode.Value} / Exposure time: {cam.ExposureTime.Value} \
     / Depth max: {cam.DepthMax.Value} / min: {cam.DepthMin.Value} / Confidence threshold: {cam.ConfidenceThreshold.Value}")
     # Gamma correction

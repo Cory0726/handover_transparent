@@ -135,7 +135,7 @@ def get_T_cam_grasp():
     cam_y = (v - cy) * z / fy
     cam_z = z
     # # Generate the transformation metrix
-    return pose_to_matrix(cam_x, cam_y, cam_z, 0, 0, -angle)
+    return pose_to_matrix(cam_x, cam_y, cam_z, 0, 0, angle)
 
 def get_T_flange_cam():
     # Load the file

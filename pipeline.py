@@ -52,9 +52,7 @@ def main():
     # Initialize the log.
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
-    # ==================================================
     # ToF intensity and depth data
-    # ==================================================
     # Grab the intensity image and depth image from ToF camera.
     # logging.info('Grabbing ToF data...')
     # run_tof_data_grab_process()
@@ -77,13 +75,15 @@ def main():
     # logging.info('Running GR-ConvNet model...')
     # run_gr_convnet_predict_process()
 
-    # ==================================================
-    # Execute grasp
-    # ==================================================
+    # Get the grasp point pose
     grasp_pose = get_grasp_pose()
-    print('Grasp Pose:')
-    print(f'Translation: {grasp_pose[:3]} mm')
-    print(f'Rotation: {grasp_pose[3:]} degrees')
+    print(f'Grasp Pose:\n\tTranslation: {grasp_pose[:3]} mm, Rotation: {grasp_pose[3:]} degrees')
+    origin_point = [-400.1218, 12.36882, 636.417, -176.5101, 51.12951, 19.41987]
+    # Execute grasping
+    tmrobot = TMRobot('192.168.50.49')
+    # tmrobot.move2origin()
+    # print(tmrobot.query_tm_data())
 
+    tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
 if __name__ == '__main__':
     main()
