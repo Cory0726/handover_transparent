@@ -2,7 +2,7 @@ import sys
 import subprocess
 import logging
 import cv2
-import estimate_grasp_pose
+from estimate_grasp_pose import get_grasp_pose
 from techman_tools.robot_control import TMRobot
 
 def run_tof_data_grab_process():
@@ -62,8 +62,8 @@ def main():
     # save_intensity_to_grayscale('data/tof_intensity.png')
 
     # U-Net hand segmentation
-    logging.info('Running U-Net model...')
-    run_unet_predict_process()
+    # logging.info('Running U-Net model...')
+    # run_unet_predict_process()
 
     # Depth-Anything-3
     # logging.info('Running DA3 model...')
@@ -80,6 +80,10 @@ def main():
     # ==================================================
     # Execute grasp
     # ==================================================
+    grasp_pose = get_grasp_pose()
+    print('Grasp Pose:')
+    print(f'Translation: {grasp_pose[:3]} mm')
+    print(f'Rotation: {grasp_pose[3:]} degrees')
 
 if __name__ == '__main__':
     main()

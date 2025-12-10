@@ -160,7 +160,7 @@ def get_pose_tool_grasp():
     pose_flange_grasp[2] = pose_flange_grasp[2] - tool_size
     return pose_flange_grasp
 
-def run():
+def get_grasp_pose():
     grasp_pose = get_pose_tool_grasp()
     grasp_pose_dict = {
         'x': grasp_pose[0],
@@ -174,5 +174,5 @@ def run():
         json.dump(grasp_pose_dict, f, indent=4)
     return grasp_pose
 
-if __name__ == '__main__':
-    run()
+# if __name__ == '__main__':
+#     get_grasp_pose()
