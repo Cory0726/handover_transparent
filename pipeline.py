@@ -76,6 +76,7 @@ def main():
     # run_gr_convnet_predict_process()
 
     # Get the grasp point pose (Pick point)
+    logging.info('Start grasping...')
     grasp_pose = get_grasp_pose()
     show_pose('Grasp Pose', grasp_pose)
     # Set the place point
@@ -85,9 +86,11 @@ def main():
     # Execute grasping
     tmrobot = TMRobot('192.168.50.49')
     tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
+    print(tmrobot.query_tm_data())
 
     # tmrobot.move2origin()
-    # print(tmrobot.query_tm_data())
+    # tmrobot.gripper_open()
+
 
 if __name__ == '__main__':
     main()

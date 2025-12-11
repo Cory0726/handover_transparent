@@ -73,8 +73,6 @@ class TMRobot:
         origin_point = [-400.1218, 12.36882, 636.417, -176.5101, 51.12951, 19.41987]
         # J1, J2, J3, J4, J5, J6 (deg)
         # origin_point = [196, -8, 68, -21, 89, 268]
-        print('Move to Origin point at base coordinates...')
-        show_pose('Origin Point', origin_point)
         self.move2target(origin_point)
 
     def move2target_toolframe(self, target_point):

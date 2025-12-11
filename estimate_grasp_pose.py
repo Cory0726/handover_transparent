@@ -115,16 +115,16 @@ def invert_transform(T):
 
     return T_inv
 
-def get_T_cam_grasp():
+def get_T_cam_grasp(cam_matrix_file, grasp_result_file):
     # Load the tof camera matrix
-    with open('data/tof_cam_matrix.json', 'r') as f:
+    with open(cam_matrix_file, 'r') as f:
         tof_cam_data = json.load(f)
     fx = tof_cam_data['fx']  # unit: pixel
     fy = tof_cam_data['fy']
     cx = tof_cam_data['cx']
     cy = tof_cam_data['cy']
     # Load the grasp point from result of GR-ConvNet
-    with open('data/grconv_grasp_result.json', 'r') as f:
+    with open(grasp_result_file, 'r') as f:
         grasp_result_data = json.load(f)
     v, u = grasp_result_data['center']  # unit: pixel
     z = grasp_result_data['depth']  # unit: mm
@@ -137,9 +137,9 @@ def get_T_cam_grasp():
     # # Generate the transformation metrix
     return pose_to_matrix(cam_x, cam_y, cam_z, 0, 0, angle)
 
-def get_T_flange_cam():
+def get_T_flange_cam(file):
     # Load the file
-    with open('data/tof_cam_flange_transfer.json', 'r') as f:
+    with open(file, 'r') as f:
         flange_in_cam = json.load(f)
     x = flange_in_cam['x']  * 1000  # unit: mm
     y = flange_in_cam['y'] * 1000
@@ -150,30 +150,32 @@ def get_T_flange_cam():
     # Create the transformation matrix
     return invert_transform(pose_to_matrix(x, y, z, rx, ry, rz))
 
-def get_pose_flange_grasp():
-    T_flage_grasp = get_T_flange_cam() @ get_T_cam_grasp()
-    return matrix_to_pose(T_flage_grasp)
-
-def get_pose_tool_grasp():
-    tool_size = 220  # unit: mm
-    pose_flange_grasp = get_pose_flange_grasp()
-    pose_flange_grasp[2] = pose_flange_grasp[2] - tool_size
-    return pose_flange_grasp
-
 def get_grasp_pose():
-    grasp_pose = get_pose_tool_grasp()
+    # File path
+    file_tof_cam_flange_t = 'data/tof_cam_flange_transfer.json'
+    file_cam_matrix = 'data/tof_cam_matrix.json'
+    file_grasp_result = 'data/grconv_grasp_result.json'
+    # Set grasp offset (gripper length)
+    tool_size = 220  # unit: mm
+    # Estimate grasp pose
+    T_flage_grasp = get_T_flange_cam(file_tof_cam_flange_t) @ get_T_cam_grasp(file_cam_matrix, file_grasp_result)
+    pose_flange_grasp = matrix_to_pose(T_flage_grasp)
+    pose_flange_grasp[2] = pose_flange_grasp[2] - tool_size
+    # Save the grasp pose as .json
     grasp_pose_dict = {
-        'x': grasp_pose[0],
-        'y': grasp_pose[1],
-        'z': grasp_pose[2],
-        'rx': grasp_pose[3],
-        'ry': grasp_pose[4],
-        'rz': grasp_pose[5]
+        'x': pose_flange_grasp[0],
+        'y': pose_flange_grasp[1],
+        'z': pose_flange_grasp[2],
+        'rx': pose_flange_grasp[3],
+        'ry': pose_flange_grasp[4],
+        'rz': pose_flange_grasp[5]
     }
     with open('data/grasp_estimate_pose.json', 'w') as f:
         json.dump(grasp_pose_dict, f, indent=4)
-    return grasp_pose
+
+    return pose_flange_grasp
 
 
-# if __name__ == '__main__':
-#     get_grasp_pose()
+if __name__ == '__main__':
+    grasp_point = get_grasp_pose()
+    print(grasp_point)
