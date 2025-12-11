@@ -3,7 +3,7 @@ import subprocess
 import logging
 import cv2
 from estimate_grasp_pose import get_grasp_pose
-from techman_tools.robot_control import TMRobot
+from techman_tools.robot_control import TMRobot, show_pose
 
 def run_tof_data_grab_process():
     subprocess.run(
@@ -75,15 +75,19 @@ def main():
     # logging.info('Running GR-ConvNet model...')
     # run_gr_convnet_predict_process()
 
-    # Get the grasp point pose
+    # Get the grasp point pose (Pick point)
     grasp_pose = get_grasp_pose()
-    print(f'Grasp Pose:\n\tTranslation: {grasp_pose[:3]} mm, Rotation: {grasp_pose[3:]} degrees')
+    show_pose('Grasp Pose', grasp_pose)
+    # Set the place point
     origin_point = [-400.1218, 12.36882, 636.417, -176.5101, 51.12951, 19.41987]
+    show_pose('Origin Point', origin_point)
+
     # Execute grasping
     tmrobot = TMRobot('192.168.50.49')
+    tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
+
     # tmrobot.move2origin()
     # print(tmrobot.query_tm_data())
 
-    tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
 if __name__ == '__main__':
     main()

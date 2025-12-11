@@ -35,8 +35,11 @@ async def pick_and_place_async(robot_ip, pick_point, place_point, speed_perc, ac
         trsct.set_queue_tag(2, wait_for_completion=True)
         await trsct.submit()
     # Open the gripper
-    await set_params(robot_ip, {'End_DO0': False})
-    await asyncio.sleep(gripper_delay)
+    # await set_params(robot_ip, {'End_DO0': False})
+    # await asyncio.sleep(gripper_delay)
+
+def show_pose(name, pose):
+    print(name + f'\n\tTranslation: {pose[:3]} mm, Rotation: {pose[3:]} degrees')
 
 class TMRobot:
     def __init__(self, robot_ip):
@@ -50,14 +53,19 @@ class TMRobot:
         return asyncio.run(query_params(self.robot_ip, data_list))
 
     def gripper_close(self):
+        print('Gripper Closing...')
+        asyncio.run(self.gripper_close())
         params = {'End_DO0':True}
         asyncio.run(set_params(self.robot_ip,params))
 
     def gripper_open(self):
+        print('Gripper Opening...')
         params = {'End_DO0':False}
         asyncio.run(set_params(self.robot_ip,params))
 
     def move2target(self, target_point):
+        print('Move to Target point at base coordinates...')
+        show_pose('Target Point', target_point)
         asyncio.run(motion_ptp(self.robot_ip, target_point, self.speed_perc, self.acc_dur))
 
     def move2origin(self):
@@ -65,11 +73,17 @@ class TMRobot:
         origin_point = [-400.1218, 12.36882, 636.417, -176.5101, 51.12951, 19.41987]
         # J1, J2, J3, J4, J5, J6 (deg)
         # origin_point = [196, -8, 68, -21, 89, 268]
-        print(f'Origin Pose:\n\tTranslation: {origin_point[:3]} mm, Rotation: {origin_point[3:]} degrees')
+        print('Move to Origin point at base coordinates...')
+        show_pose('Origin Point', origin_point)
         self.move2target(origin_point)
 
     def move2target_toolframe(self, target_point):
+        print('Move to Target point at flange coordinates...')
+        show_pose('Target Point', target_point)
         asyncio.run(motion_relative_ptp(self.robot_ip, target_point, self.speed_perc, self.acc_dur))
 
     def pick_and_place(self, pick_point, place_point):
+        print('Execute pick and place...')
+        print('Pick Point', pick_point)
+        print('Place Point', place_point)
         asyncio.run(pick_and_place_async(self.robot_ip, pick_point, place_point, self.speed_perc, self.acc_dur, self.gripper_delay))

@@ -174,5 +174,6 @@ def get_grasp_pose():
         json.dump(grasp_pose_dict, f, indent=4)
     return grasp_pose
 
+
 # if __name__ == '__main__':
 #     get_grasp_pose()
