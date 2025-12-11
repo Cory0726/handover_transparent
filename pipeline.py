@@ -53,14 +53,13 @@ def main():
     # Initialize the log.
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     # Wait 5 second for start
-    logging.info('Wait 5 seconds for start...')
-    time.sleep(5)  #  unit : second
+    logging.info('Wait 3 seconds for start...')
+    time.sleep(3)  #  unit : second
 
-    # ToF intensity and depth data
-    # Grab the intensity image and depth image from ToF camera.
-    logging.info('Grabbing ToF data...')
-    run_tof_data_grab_process()
-    save_intensity_to_grayscale('data/tof_intensity.png')
+    # From ToF Camera, grabbing the intensity image and depth image.
+    # logging.info('Grabbing ToF data...')
+    # run_tof_data_grab_process()
+    # save_intensity_to_grayscale('data/tof_intensity.png')
 
     # U-Net hand segmentation
     logging.info('Running U-Net model...')
@@ -71,8 +70,8 @@ def main():
     run_da3_predict_process()
 
     # TransCG
-    logging.info('Running TransCG model...')
-    run_transcg_predict_process()
+    # logging.info('Running TransCG model...')
+    # run_transcg_predict_process()
 
     # GR-ConvNet
     logging.info('Running GR-ConvNet model...')
@@ -86,16 +85,18 @@ def main():
     origin_point = [-400.1218, 12.36882, 636.417, -176.5101, 51.12951, 19.41987]
 
     # Execute grasping
-    # tmrobot = TMRobot('192.168.50.49')
-    # tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
-    # print(tmrobot.query_tm_data())
+    tmrobot = TMRobot('192.168.50.49')
+    tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
+    print(tmrobot.query_tm_data())
 
-    # tmrobot.move2origin()
-    # tmrobot.gripper_open()
+def reset_robot_state():
+    robot = TMRobot('192.168.50.49')
+    robot.move2origin()
+    robot.gripper_open()
 
 
 if __name__ == '__main__':
     main()
+    # reset_robot_state()
 
-    # robot = TMRobot('192.168.50.49')
-    # robot.gripper_open()
+

@@ -46,7 +46,7 @@ class TMRobot:
         self.robot_ip = robot_ip
         self.speed_perc = 0.60  # speed percentage(%)
         self.acc_dur = 200  # Acceleration duration(ms)
-        self.gripper_delay = 2  # Unit : second
+        self.gripper_delay = 5  # Unit : second
 
     def query_tm_data(self):
         data_list = {'Coord_Robot_Flange', 'End_DO0'}

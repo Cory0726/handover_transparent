@@ -194,7 +194,7 @@ def save_results(rgb_img, grasp_q_img, grasp_angle_img, depth_img=None, no_grasp
     fig.canvas.draw()
     plt.close(fig)
 
-def plot_depth_with_grasp(depth_img,mask_img, grasp_q_img, grasp_angle_img, grasp_width_img=None, no_grasps=1):
+def plot_depth_with_grasp(depth_img,mask_img, grasp_q_img, grasp_angle_img, crop_size, grasp_width_img=None, no_grasps=1):
     """
     Show depth image with predicted grasp rectangles overlaid.
     """
@@ -216,8 +216,8 @@ def plot_depth_with_grasp(depth_img,mask_img, grasp_q_img, grasp_angle_img, gras
     for g in gs:
         q_score = grasp_q_img[g.center[0], g.center[1]]
         temp_h, temp_w = g.center
-        temp_h = temp_h + 128
-        temp_w = temp_w + 208
+        temp_h = temp_h + int((480 - crop_size)/2)
+        temp_w = temp_w + int((640 - crop_size)/2)
         g.center = (temp_h, temp_w)
         if not (mask_img[g.center[0], g.center[1]] == 255):
             print(f'Grasp center: {(g.center[0], g.center[1])}, angle: {g.angle} rad, width: {g.width} mm,' \
