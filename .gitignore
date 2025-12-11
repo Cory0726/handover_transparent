@@ -210,3 +210,6 @@ __marimo__/
 /u_net/Hand_Seg_EGTEA_plus_S640480G_Scale05_Score08994_20251123.pth
 /u_net/Hand_Seg_EGTEA_plus_S640480G_Scale10_Score08954_Epoch20_20251207.pth
 triton-3.0.0-cp312-cp312-win_amd64.whl
+
+# Models
+Depth-Anything-3/

@@ -18,7 +18,7 @@ pip install opencv-python, tqdm, scikit-learn, scikit-image, addict
 
 # depth-anything-3
 # Step1 : git clone https://github.com/ByteDance-Seed/Depth-Anything-3.git
-# Step2 : cd to the Depth-Anything-3 folder
+# Step2 : cd to the Depth-Anything-3 folder (Don't delete this folder)
 pip install -e .
 
 # triton

@@ -32,7 +32,7 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     Configure a ToF camera (Basler blaze-101) parameter after opening the camera.
     """
     # Operating mode: ShortRange: 0 - 1498 mm / LongRange: 0 - 9990 mm
-    cam.OperatingMode.Value = "LongRange"
+    cam.OperatingMode.Value = "ShortRange"
     # Exposure time (us)
     cam.ExposureTime.Value = 100.0
     # Max depth / Min depth (mm)
