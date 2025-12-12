@@ -135,7 +135,7 @@ def get_T_cam_grasp(cam_matrix_file, grasp_result_file):
     cam_y = (v - cy) * z / fy
     cam_z = z
     # # Generate the transformation metrix
-    return pose_to_matrix(cam_x, cam_y, cam_z, 0, 0, -angle)
+    return pose_to_matrix(cam_x, cam_y, cam_z, 0, 0, angle)
 
 def get_T_flange_cam(file):
     # Load the file
@@ -157,7 +157,7 @@ def get_grasp_pose():
     file_grasp_result = 'data/grconv_grasp_result.json'
     # Set grasp offset (gripper length)
     tool_size = 210  # gripper length, unit: mm
-    error_feedback = 0  # unit: mm
+    error_feedback = 50  # unit: mm
     # Estimate grasp pose
     T_flage_grasp = get_T_flange_cam(file_tof_cam_flange_t) @ get_T_cam_grasp(file_cam_matrix, file_grasp_result)
     pose_flange_grasp = matrix_to_pose(T_flage_grasp)

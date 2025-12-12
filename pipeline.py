@@ -57,9 +57,9 @@ def main():
     time.sleep(3)  #  unit : second
 
     # From ToF Camera, grabbing the intensity image and depth image.
-    # logging.info('Grabbing ToF data...')
-    # run_tof_data_grab_process()
-    # save_intensity_to_grayscale('data/tof_intensity.png')
+    logging.info('Grabbing ToF data...')
+    run_tof_data_grab_process()
+    save_intensity_to_grayscale('data/tof_intensity.png')
 
     # U-Net hand segmentation
     logging.info('Running U-Net model...')
