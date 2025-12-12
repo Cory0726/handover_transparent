@@ -1,10 +1,105 @@
 import cv2
-import os
-import glob
-import shutil
 import numpy as np
+import shutil
 from pathlib import Path
 from PIL import Image
+import os, glob
+
+def depth_to_color(depth):
+    """Normalize depth to 0~255 and apply a colormap for visualization."""
+    depth_vis = depth.copy()
+
+    # Handle NaN / inf
+    depth_vis = np.where(np.isfinite(depth_vis), depth_vis, 0)
+
+    # Use percentiles to avoid extreme outliers affecting contrast
+    d_min = np.percentile(depth_vis, 1)
+    d_max = np.percentile(depth_vis, 99)
+
+    if d_max <= d_min:  # fallback
+        d_min = float(depth_vis.min())
+        d_max = float(depth_vis.max())
+
+    if d_max == d_min:
+        d_max = d_min + 1e-6
+
+    depth_norm = np.clip((depth_vis - d_min) / (d_max - d_min), 0, 1)
+    depth_8u = (depth_norm * 255).astype(np.uint8)
+    depth_color = cv2.applyColorMap(depth_8u, cv2.COLORMAP_JET)
+    return depth_color
+
+def mouse_event_handler(event, x, y, flags, param):
+    """
+    Mouse event callback function
+    """
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print(f"Mouse click at x={x}, y={y}")
+        img = param["img"]
+        # Print the white pin on the image
+        cv2.circle(img, (x, y), 5, (255, 255, 255), -1)
+        cv2.imshow(param["win_name"], img)
+
+def img_mouse_click_xy(img_path):
+    # Load image
+    img = cv2.imread(img_path)
+    if img is None:
+        print(f"Failed to read image: {img_path}")
+        return
+
+    win_name = "Click to get (x, y)"
+    cv2.namedWindow(win_name)
+
+    params = {"img": img, "win_name": win_name}
+
+    # Set the MouseCallback function
+    cv2.setMouseCallback(win_name, mouse_event_handler, params)
+
+    # Display the image
+    cv2.imshow(win_name, img)
+
+    print("在圖片視窗上用滑鼠左鍵點擊，就會印出 x, y 座標。按任意鍵關閉視窗。")
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def crop_by_4_points(arr, points):
+    """
+    Crop a 2D or 3D NumPy array using 4 input points.
+    Supports:
+      - 2D arrays: (H, W)
+      - 3D arrays: (H, W, C)
+
+    :param arr: Input NumPy array (H, W) or (H, W, C)
+    :param points: Four points [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]
+                   Note: x = column index, y = row index
+    :return: Cropped array with the same number of channels as input
+    """
+
+    # Ensure arr has at least 2 dimensions
+    if arr.ndim < 2:
+        raise ValueError("Input array must be at least 2D (H, W)")
+
+    pts = np.array(points, dtype=np.int32)
+
+    # Compute bounding box from the 4 points
+    x_min = np.min(pts[:, 0])
+    x_max = np.max(pts[:, 0])
+    y_min = np.min(pts[:, 1])
+    y_max = np.max(pts[:, 1])
+
+    # Image shape
+    h, w = arr.shape[:2]
+
+    # Boundary check (prevent out-of-range indexing)
+    x_min = max(0, x_min)
+    y_min = max(0, y_min)
+    x_max = min(w - 1, x_max)
+    y_max = min(h - 1, y_max)
+
+    # NumPy slicing works for both 2D (H,W) and 3D (H,W,C)
+    cropped_arr = arr[y_min:y_max, x_min:x_max]
+
+    return cropped_arr
 
 def binarize_images(input_dir, output_dir=None, threshold=127):
     """
@@ -422,5 +517,5 @@ def apply_mask_keep_black(img, mask):
 
     return output
 
-
-
+def array_info(arr):
+    return f'Shape{arr.shape}, Max: {arr.max():f}, Min: {arr.min():f}, Avg: {arr.mean():f}, {arr.dtype}'

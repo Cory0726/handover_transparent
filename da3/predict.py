@@ -48,7 +48,8 @@ def calibrate_depth_ransac(
         (D_tof > min_depth) & (D_tof < max_depth)
     )
     save_file_name = 'data/da3_valid_pixel_mask.png'
-    cv2.imwrite(save_file_name, valid.astype(np.uint8) * 255)
+    valid_mask = valid.astype(np.uint8) * 255
+    cv2.imwrite(save_file_name, valid_mask)
     print(f'Saved {save_file_name}')
     # Check the number of valid pixels
     print('Number of valid pixels: ', valid.sum())
@@ -72,7 +73,7 @@ def calibrate_depth_ransac(
     print(f"[Calibration] d_tof ≈ {a:.4f} * d_da3 + {b:.4f}")
     # Apply calibration to the entire predicted depth map of DA3
     D_da3_calibrated = a * D_da3 + b
-    return D_da3_calibrated
+    return D_da3_calibrated , valid_mask
 
 def depth_to_color(depth):
     """Normalize depth to 0~255 and apply a colormap for visualization."""
@@ -136,14 +137,22 @@ def main(input_img_file, tof_depth_file, hand_seg_mask_file):
     hand_seg_mask = cv2.imread(hand_seg_mask_file, cv2.IMREAD_UNCHANGED)  # [255, 0]
     print('Hand Seg mask : ' + array_info(hand_seg_mask))
     # Calibrate the predicted raw depth
-    calibrate_depth = calibrate_depth_ransac(predicted_depth, tof_depth, hand_seg_mask)  # Unit : mm
+    calibrate_depth, valid_mask = calibrate_depth_ransac(predicted_depth, tof_depth, hand_seg_mask)  # Unit : mm
     print('Calibrated depth : ' + array_info(calibrate_depth) + '(mm)')
     # Save the calibrated depth as .npy
     np.save('data/da3_cal_depth', calibrate_depth)
     print(f'Save : data/da3_cal_depth')
     # Save the calibrated depth heatmap
     save_file_name = 'data/da3_cal_depth_heatmap.png'
-    cv2.imwrite(save_file_name, depth_to_color(calibrate_depth))
+    calibrate_depth_heatmap = depth_to_color(calibrate_depth)
+    cv2.imwrite(save_file_name, calibrate_depth_heatmap)
+    print(f'Saved : {save_file_name}')
+    # Save the calibrated depth heatmap with segmentation
+    valid_mask = (valid_mask == 255).astype(np.uint8)
+    for i in range(3):
+        calibrate_depth_heatmap[:, :, i] = calibrate_depth_heatmap[:, :, i] * valid_mask
+    save_file_name = 'data/da3_cal_depth_heatmap_seg_hand.png'
+    cv2.imwrite(save_file_name, calibrate_depth_heatmap)
     print(f'Saved : {save_file_name}')
 
 def parse_args():

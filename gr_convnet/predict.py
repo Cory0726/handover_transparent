@@ -12,6 +12,29 @@ def vis_heatmap(img:np.ndarray):
     img = cv2.normalize(img, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX).astype(np.uint8)
     return img
 
+def depth_to_color(depth):
+    """Normalize depth to 0~255 and apply a colormap for visualization."""
+    depth_vis = depth.copy()
+
+    # Handle NaN / inf
+    depth_vis = np.where(np.isfinite(depth_vis), depth_vis, 0)
+
+    # Use percentiles to avoid extreme outliers affecting contrast
+    d_min = np.percentile(depth_vis, 1)
+    d_max = np.percentile(depth_vis, 99)
+
+    if d_max <= d_min:  # fallback
+        d_min = float(depth_vis.min())
+        d_max = float(depth_vis.max())
+
+    if d_max == d_min:
+        d_max = d_min + 1e-6
+
+    depth_norm = np.clip((depth_vis - d_min) / (d_max - d_min), 0, 1)
+    depth_8u = (depth_norm * 255).astype(np.uint8)
+    depth_color = cv2.applyColorMap(depth_8u, cv2.COLORMAP_JET)
+    return depth_color
+
 def main(depth_path, mask_path):
     # ==================================================
     # Load the data
@@ -46,10 +69,14 @@ def main(depth_path, mask_path):
     # Save the result
     # ==================================================
     cv2.imwrite('data/grconv_crop_depth.png', vis_heatmap(crop_depth))
+    cv2.imwrite('data/grconv_crop_depth_heatmap.png', depth_to_color(crop_depth))
     cv2.imwrite('data/grconv_crop_mask.png', crop_mask)
     cv2.imwrite('data/grconv_q_img.png', vis_heatmap(q_img))
+    cv2.imwrite('data/grconv_q_img_heatmap.png', depth_to_color(q_img))
     cv2.imwrite('data/grconv_ang_img.png', vis_heatmap(ang_img))
+    cv2.imwrite('data/grconv_ang_img_heatmap.png', depth_to_color(ang_img))
     cv2.imwrite('data/grconv_width_img.png', vis_heatmap(width_img))
+    cv2.imwrite('data/grconv_width_img_heatmap.png', depth_to_color(width_img))
     # Plot the grasp rectangle on the depth image
     depth = depth.squeeze()
     fig, grasp= plot_depth_with_grasp(depth, mask, q_img, ang_img, crop_size, width_img)

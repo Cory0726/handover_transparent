@@ -96,7 +96,6 @@ def reset_robot_state():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
     # reset_robot_state()
-
-
+    run_gr_convnet_predict_process()
