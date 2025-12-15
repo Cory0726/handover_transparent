@@ -433,7 +433,7 @@ def detect_grasps(q_img, ang_img, width_img=None, no_grasps=1):
 
         g = Grasp(grasp_point, grasp_angle)
         if width_img is not None:
-            g.length = width_img[grasp_point]  # Default
+            g.length = width_img[grasp_point]
             g.width = g.length / 2
 
         grasps.append(g)

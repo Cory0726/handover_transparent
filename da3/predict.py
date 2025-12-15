@@ -1,4 +1,4 @@
-
+import json
 import argparse
 import torch
 import cv2
@@ -15,19 +15,22 @@ def da3_model_initial():
     model = model.to(device)
     return model
 
-def predict_da3_depth(da3_model, img):
+def predict_da3_depth(da3_model, img, focal_length):
     prediction = da3_model.inference([img])
+    # Calibrate the depth with the camera intrinsic matrix K
+    # For model "DA3METRIC-LARGE", use `metric_depth = focal * net_output / 300`
+    rawdepth = (prediction.depth[0] * focal_length) / 300
     # Re-size to the input resolution
-    raw_depth = cv2.resize(prediction.depth[0],(640,480),interpolation=cv2.INTER_LINEAR)
+    raw_depth = cv2.resize(rawdepth,(640,480),interpolation=cv2.INTER_LINEAR)
     return raw_depth
 
 def calibrate_depth_ransac(
     D_da3,                      # DA3 depth map, shape (H, W), (mm)
     D_tof,                      # ToF depth map, shape (H, W), mm
     mask,                       # Mask image, 255 = use pixel, 0 = ignore
-    min_depth=200,             # Minimum valid depth (mm)
-    max_depth=600,              # Maximum valid depth (mm)
-    residual_threshold=1,    # RANSAC inlier threshold (mm)
+    min_depth=300,             # Minimum valid depth (mm)
+    max_depth=1000,              # Maximum valid depth (mm)
+    residual_threshold=10,    # RANSAC inlier threshold (mm)
     min_samples=3000,            # Minimum valid samples for calibration
     max_trials=1000              # RANSAC iterations
 ):
@@ -98,7 +101,7 @@ def depth_to_color(depth):
     depth_color = cv2.applyColorMap(depth_8u, cv2.COLORMAP_JET)
     return depth_color
 
-def main(input_img_file, tof_depth_file, hand_seg_mask_file):
+def main(input_img_file, tof_depth_file, hand_seg_mask_file, cam_matrix_file):
     """
     Predict Depth-anything 3 depth with RANSAC calibration.
     :param input_img_file: Path to grayscale or intensity input image for DA3 prediction.
@@ -114,9 +117,16 @@ def main(input_img_file, tof_depth_file, hand_seg_mask_file):
     # Load original image for DA3 model predict
     img = cv2.imread(input_img_file, cv2.IMREAD_GRAYSCALE)
     print('Original image for DA3 predict : ' + array_info(img))
+    # Load the ToF camera matrix for getting focal length
+    with open(cam_matrix_file, 'r') as f:
+        tof_cam_data = json.load(f)
+    fx = tof_cam_data['fx']
+    fy = tof_cam_data['fy']
+    focal_length = (fx + fy) / 2
+
     # Predicted raw depth
     # predicted_depth = predict_da3_depth(model, img)
-    predicted_depth = predict_da3_depth(model, img) * 1000  # Unit : mm
+    predicted_depth = predict_da3_depth(model, img, focal_length) * 1000  # Unit : mm
     print('Predicted depth by DA3 model : ' + array_info(predicted_depth) + '(mm)')
     # Save the predicted depth as .npy
     save_file_name = 'data/da3_predicted_depth'
@@ -160,8 +170,9 @@ def parse_args():
     parser.add_argument('--img', type=str)
     parser.add_argument('--depth', type=str)
     parser.add_argument('--hand', type=str)
+    parser.add_argument('--cam-matrix', type=str)
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_args()
-    main(args.img, args.depth, args.hand)
+    main(args.img, args.depth, args.hand, args.cam_matrix)

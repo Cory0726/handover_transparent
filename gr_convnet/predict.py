@@ -40,15 +40,19 @@ def main(depth_path, mask_path):
     # Load the data
     # ==================================================
     depth = np.load(depth_path)  # shape (H, W)
-    depth = np.expand_dims(depth, axis=2)  # shape (H, W, 1)
     mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)  # shape (H, W)
+    # Separate the hand from depth
+    depth_mask = depth.copy() * (mask == 0)
+    depth_mask = np.expand_dims(depth_mask, axis=2)  # shape (H, W, 1)
     # ==================================================
     # Pre-process the data
     # ==================================================
-    crop_size = 320  # Default crop_size = 224
+    # Default crop size = 224
+    # The closer the size is to 224, the better the performance.
+    crop_size = 224  # Default crop_size = 224,
     depth_data = CameraData(output_size=crop_size)
-    x, crop_depth = depth_data.get_data(depth)
-    print(f'Crop depth : {crop_depth.shape}, {crop_depth.dtype}, {crop_depth.max()}, {crop_depth.min()}')
+    x, crop_depth_mask = depth_data.get_data(depth_mask)
+    print(f'Crop depth with mask : {crop_depth_mask.shape}, {crop_depth_mask.dtype}, {crop_depth_mask.max()}, {crop_depth_mask.min()}')
     x = x.unsqueeze(0)  # Increase the dimension of batch
     mask_data = CameraData(output_size=crop_size)
     _, crop_mask = mask_data.get_data(mask)
@@ -68,8 +72,8 @@ def main(depth_path, mask_path):
     # ==================================================
     # Save the result
     # ==================================================
-    cv2.imwrite('data/grconv_crop_depth.png', vis_heatmap(crop_depth))
-    cv2.imwrite('data/grconv_crop_depth_heatmap.png', depth_to_color(crop_depth))
+    cv2.imwrite('data/grconv_crop_depth_with_mask.png', vis_heatmap(crop_depth_mask))
+    cv2.imwrite('data/grconv_crop_depth_with_mask_heatmap.png', depth_to_color(crop_depth_mask))
     cv2.imwrite('data/grconv_crop_mask.png', crop_mask)
     cv2.imwrite('data/grconv_q_img.png', vis_heatmap(q_img))
     cv2.imwrite('data/grconv_q_img_heatmap.png', depth_to_color(q_img))
@@ -79,7 +83,7 @@ def main(depth_path, mask_path):
     cv2.imwrite('data/grconv_width_img_heatmap.png', depth_to_color(width_img))
     # Plot the grasp rectangle on the depth image
     depth = depth.squeeze()
-    fig, grasp= plot_depth_with_grasp(depth, mask, q_img, ang_img, crop_size, width_img)
+    fig, grasp= plot_depth_with_grasp(depth, mask, q_img, ang_img, crop_size, width_img, no_grasps=10)
     grasp_depth = depth[grasp.center[0], grasp.center[1]]
     print(f'Q max: {q_img.max()}, Q min: {q_img.min()}')
     print(f'Grasp depth : {grasp_depth} mm')

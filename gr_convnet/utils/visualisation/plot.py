@@ -220,9 +220,12 @@ def plot_depth_with_grasp(depth_img,mask_img, grasp_q_img, grasp_angle_img, crop
         temp_w = temp_w + int((640 - crop_size)/2)
         g.center = (temp_h, temp_w)
         if not (mask_img[g.center[0], g.center[1]] == 255):
-            print(f'Grasp center: {(g.center[0], g.center[1])}, angle: {g.angle} rad, width: {g.width} mm,' \
-              f'q score: {q_score}')
-            g.plot(ax)
-            break
+            if g.width < 200:  # unit : mm
+                print(f'Grasp center: {(g.center[0], g.center[1])}, angle: {g.angle} rad, width: {g.width} mm,' \
+                  f'q score: {q_score}')
+                g.length = g.length / 2
+                g.width = g.width / 3
+                g.plot(ax)
+                break
 
     return fig, g

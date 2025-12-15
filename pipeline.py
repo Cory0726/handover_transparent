@@ -3,6 +3,7 @@ import subprocess
 import logging
 import time
 import cv2
+import numpy as np
 from estimate_grasp_pose import get_grasp_pose
 from techman_tools.robot_control import TMRobot, show_pose
 
@@ -32,7 +33,8 @@ def run_da3_predict_process():
         ['python', 'da3/predict.py',
          '--img', 'data/tof_intensity_grayscale.png',
          '--depth', 'data/tof_depth.npy',
-         '--hand', 'data/unet_hand_mask.png'], check=True
+         '--hand', 'data/unet_hand_mask.png',
+         '--cam-matrix', 'data/tof_cam_matrix.json'], check=True
     )
 
 def run_transcg_predict_process():
@@ -56,10 +58,12 @@ def main():
     logging.info('Wait 3 seconds for start...')
     time.sleep(3)  #  unit : second
 
+    start_time = time.time()
+
     # From ToF Camera, grabbing the intensity image and depth image.
-    logging.info('Grabbing ToF data...')
-    run_tof_data_grab_process()
-    save_intensity_to_grayscale('data/tof_intensity.png')
+    # logging.info('Grabbing ToF data...')
+    # run_tof_data_grab_process()
+    # save_intensity_to_grayscale('data/tof_intensity.png')
 
     # U-Net hand segmentation
     logging.info('Running U-Net model...')
@@ -85,9 +89,10 @@ def main():
     origin_point = [-400.1218, 12.36882, 636.417, -176.5101, 51.12951, 19.41987]
 
     # Execute grasping
-    tmrobot = TMRobot('192.168.50.49')
-    tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
-    print(tmrobot.query_tm_data())
+    # tmrobot = TMRobot('192.168.50.49')
+    # tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
+    end_time = time.time()
+    logging.info(f'Finished in {end_time - start_time} seconds')
 
 def reset_robot_state():
     robot = TMRobot('192.168.50.49')
