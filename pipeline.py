@@ -25,7 +25,8 @@ def run_unet_predict_process():
     subprocess.run(
         ['python', 'u_net/predict.py',
          '--input', 'data/tof_intensity_grayscale.png',
-         '--output', 'data/unet_hand_mask.png'], check=True
+         '--output', 'data/unet_hand_mask.png',
+         '--model', 'u_net/Hand_Seg_EGTEA_plus_S640480G_Scale05_Score08994_20251123.pth'], check=True
     )
 
 def run_da3_predict_process():

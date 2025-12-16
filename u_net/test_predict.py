@@ -133,8 +133,8 @@ def main(input_img_path, output_img_path, model_path):
         )
 
         # Save images and masks at different brightness levels
-        temp_img_path = f'u_net/img_process_temp/img_brightness_{int(b*100):3d}.png'
-        temp_mask_path = f'u_net/img_process_temp/mask_brightness_{int(b*100):3d}.png'
+        temp_img_path = f'test_data/img_process_temp/img_brightness_{int(b*100):3d}.png'
+        temp_mask_path = f'test_data/img_process_temp/mask_brightness_{int(b*100):3d}.png'
         img_bright.save(temp_img_path)
         # print(f'Saved: {temp_img_path}')
         result_mask.save(temp_mask_path)
@@ -149,7 +149,7 @@ def main(input_img_path, output_img_path, model_path):
             final_mask_np = np.maximum(final_mask_np, mask_np)
 
     # Keep the largest component of the final mask
-    final_mask_np = keep_largest_component(final_mask_np)
+    # final_mask_np = keep_largest_component(final_mask_np)
     # Save the final mask
     final_mask = Image.fromarray(final_mask_np)
     final_mask.save(output_img_path)

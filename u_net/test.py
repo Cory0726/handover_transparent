@@ -1,8 +1,61 @@
-import os
 import cv2
 import numpy as np
+import os
+import subprocess
 from glob import glob
 
+
+def run_unet_predict_process_folder(input_folder, output_folder):
+    """
+    批次執行 U-Net 預測，並將輸出檔名改為 原檔名_mask.副檔名
+    :param input_folder: 原始圖片的資料夾 (例如 'data/test_images')
+    :param output_folder: 預測結果要存放的資料夾 (例如 'data/pred_masks')
+    """
+
+    # 1. 確保輸出資料夾存在
+    os.makedirs(output_folder, exist_ok=True)
+
+    # 2. 抓取資料夾內所有圖片 (支援 png, jpg, jpeg)
+    extensions = ['*.png', '*.jpg', '*.jpeg', '*.bmp']
+    image_paths = []
+    for ext in extensions:
+        image_paths.extend(glob(os.path.join(input_folder, ext)))
+
+    image_paths.sort()
+
+    print(f"==> 準備處理 {len(image_paths)} 張圖片...")
+
+    # 3. 迴圈處理每一張圖
+    for index, img_path in enumerate(image_paths):
+
+        # 取得檔名和副檔名
+        filename_with_ext = os.path.basename(img_path)  # 例如: 'hand_01.png'
+        filename_base, file_ext = os.path.splitext(filename_with_ext)  # 'hand_01', '.png'
+
+        # 組合新的輸出檔名 (加上 _mask)
+        # 範例: 'hand_01' + '_mask' + '.png' -> 'hand_01_mask.png'
+        new_filename = filename_base + '_mask' + file_ext
+
+        # 組合輸出路徑
+        save_path = os.path.join(output_folder, new_filename)
+
+        print(f"[{index + 1}/{len(image_paths)}] Processing: {filename_with_ext} -> Saving as: {new_filename}")
+
+        try:
+            # 呼叫原本的 predict.py
+            subprocess.run(
+                args=[
+                    'python', 'test_predict.py',
+                    '--input', img_path,  # 傳入單張圖片路徑
+                    '--output', save_path,
+                    '--model', 'Hand_Seg_EGTEA_plus_S640480G_Scale05_Score08994_20251123.pth',
+                ],
+                check=True
+            )
+        except subprocess.CalledProcessError as e:
+            print(f"!! Error processing {filename_with_ext}: {e}")
+
+    print("==> 全部處理完成！")
 
 def calculate_unet_metrics(pred_dir, gt_dir, threshold=127):
     """
@@ -102,11 +155,7 @@ def calculate_unet_metrics(pred_dir, gt_dir, threshold=127):
 
 
 if __name__ == "__main__":
-    # 假設你的真實 Mask 放在這裡
-    ground_truth_folder = 'test_data/ground_truth'
 
-    # 假設你的模型預測出來的 Mask 放在這裡
-    prediction_folder = 'test_data/predict'
+    run_unet_predict_process_folder('test_data/origin_imgs', 'test_data/predict_imgs')
 
-    # 注意：請確保兩個資料夾內的圖片檔名是一樣的，或者順序是一樣的
-    calculate_unet_metrics(prediction_folder, ground_truth_folder)
+    # calculate_unet_metrics('test_data/predict_imgs', 'test_data/ground_truths')
