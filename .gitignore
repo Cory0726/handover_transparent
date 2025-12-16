@@ -213,3 +213,6 @@ triton-3.0.0-cp312-cp312-win_amd64.whl
 
 # Models
 Depth-Anything-3/
+
+# Test data
+/u_net/test_data/
