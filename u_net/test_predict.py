@@ -109,7 +109,7 @@ def keep_largest_component(mask: np.ndarray) -> np.ndarray:
 def main(input_img_path, output_img_path, model_path):
     # Load image
     img = Image.open(input_img_path)
-
+    img = img.convert('L')
     # Final mask
     final_mask_np = None
 
@@ -120,6 +120,11 @@ def main(input_img_path, output_img_path, model_path):
     for b in brightness_levels:
         enhancer = ImageEnhance.Brightness(img)
         img_bright = enhancer.enhance(b)
+
+        # Save images at different brightness levels
+        temp_img_path = f'test_data/img_process_temp/img_brightness_{int(b*100):3d}.png'
+        img_bright.save(temp_img_path)
+        print(f'Saved: {temp_img_path}')
 
         # Predict the mask by U-Net model
         result_mask = run_predict(
@@ -132,13 +137,10 @@ def main(input_img_path, output_img_path, model_path):
             bilinear=False,
         )
 
-        # Save images and masks at different brightness levels
-        temp_img_path = f'test_data/img_process_temp/img_brightness_{int(b*100):3d}.png'
+        # Save masks at different brightness levels
         temp_mask_path = f'test_data/img_process_temp/mask_brightness_{int(b*100):3d}.png'
-        img_bright.save(temp_img_path)
-        # print(f'Saved: {temp_img_path}')
         result_mask.save(temp_mask_path)
-        # print(f'Saved: {temp_mask_path}')
+        print(f'Saved: {temp_mask_path}')
 
         # Mask convert to numpy type
         mask_np = np.array(result_mask)

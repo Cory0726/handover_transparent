@@ -109,6 +109,7 @@ def keep_largest_component(mask: np.ndarray) -> np.ndarray:
 def main(input_img_path, output_img_path, model_path):
     # Load image
     img = Image.open(input_img_path)
+    img = img.convert('L')
 
     # Final mask
     final_mask_np = None

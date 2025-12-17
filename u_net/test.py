@@ -169,3 +169,5 @@ if __name__ == "__main__":
     run_unet_predict_process_folder('test_data/origin_imgs', 'test_data/predict_imgs')
 
     # calculate_unet_metrics('test_data/predict_imgs', 'test_data/ground_truths')
+    # img = cv2.imread('test_data/origin_imgs/img_00009.png', cv2.IMREAD_UNCHANGED)
+    # print(img.shape)
