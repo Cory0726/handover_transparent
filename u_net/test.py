@@ -3,7 +3,7 @@ import numpy as np
 import os
 import subprocess
 from glob import glob
-
+import json
 
 def run_unet_predict_process_folder(input_folder, output_folder):
     """
@@ -153,6 +153,16 @@ def calculate_unet_metrics(pred_dir, gt_dir, threshold=127):
     print(f"Pixel Accuracy   : {mAcc:.4f}")
     print("-" * 30)
 
+    result = {
+        'imgs_number': len(total_iou),
+        "mIoU": mIoU,
+        'Dice_Coefficient': mDice,
+        'Pixel_Accuracy': mAcc,
+    }
+    result_file_name = 'test_result/result.json'
+    with open(result_file_name, 'w') as f:
+        json.dump(result, f)
+        print(f'Saved : {result_file_name}')
 
 if __name__ == "__main__":
 
