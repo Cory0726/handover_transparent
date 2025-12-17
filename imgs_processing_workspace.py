@@ -4,24 +4,21 @@ import tools_box
 
 
 def main():
-    dir = 'C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_GAZE_PLUS_640_480_GrayScale/'
+    dir = 'C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_GAZE_PLUS_640_480_MaskFilter_05_40_Grayscale/'
     #
     # output_imgs_dir = dir + 'imgs'
-    # input_imgs_dir = dir + 'imgs_backup'
+    input_imgs_dir = dir + 'imgs'
     # imgs_gray_dir = dir + 'imgs_temp'
     #
     # output_mask_dir = dir + 'masks'
-    # input_mask_dir = dir + 'masks_backup'
+    input_mask_dir = dir + 'masks'
     # masks_bi_dir = dir + 'masks_temp'
     #
-    # tools_box.convert_folder_to_grayscale(input_imgs_dir, imgs_gray_dir)
-    # tools_box.resize_and_convert_image(imgs_gray_dir,output_imgs_dir, (640, 480))
-    #
-    # tools_box.binarize_images(input_mask_dir, masks_bi_dir)
-    # tools_box.resize_and_convert_mask(masks_bi_dir, output_mask_dir, (640, 480))
-
-    img = cv2.imread('img_00013_mask.png')
-    print(img.shape)
+    tools_box.dataset_mask_filter(
+        input_imgs_dir,
+        input_mask_dir,
+        mask_ratio_range=(0.05, 0.4),
+    )
 
 if __name__ == '__main__':
     main()

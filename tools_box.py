@@ -420,19 +420,19 @@ def convert_folder_to_grayscale(input_dir, output_dir):
             img_path = os.path.join(input_dir, filename)
 
             # Read image
-            img = cv2.imread(img_path)
+            img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
             if img is None:
                 print(f"[Warning] Failed to read: {filename}")
                 continue
 
             # Convert to grayscale
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
             # Full path for output image
             out_path = os.path.join(output_dir, filename)
 
             # Save grayscale image
-            cv2.imwrite(out_path, gray)
+            cv2.imwrite(out_path, img)
 
     print(f"Conversion complete. Grayscale images saved to: {output_dir}")
 

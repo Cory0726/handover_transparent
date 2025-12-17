@@ -165,9 +165,36 @@ def calculate_unet_metrics(pred_dir, gt_dir, threshold=127):
         print(f'Saved : {result_file_name}')
 
 if __name__ == "__main__":
+    # 1
+    run_unet_predict_process_folder(
+        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoHands_640_480_MaskFilter_05_40_GrayScale/imgs',
+        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoHands_640_480_MaskFilter_05_40_GrayScale/predict',
+    )
+    # 2
+    run_unet_predict_process_folder(
+        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoYouTubeHands_640_480_MaskFilter_05_40_GrayScale/imgs',
+        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoYouTubeHands_640_480_MaskFilter_05_40_GrayScale/predict',
+    )
+    # 3
+    run_unet_predict_process_folder(
+        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EGTEA_Gaze_plus_640_480_MaskFilter_05_40_GrayScale/imgs',
+        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EGTEA_Gaze_plus_640_480_MaskFilter_05_40_GrayScale/predict',
+    )
+    # 4
+    run_unet_predict_process_folder(
+        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_640_480_MaskFilter_05_40_GrayScale/imgs',
+        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_640_480_MaskFilter_05_40_GrayScale/predict',
+    )
+    # 5
+    run_unet_predict_process_folder(
+        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_GAZE_PLUS_640_480_MaskFilter_05_40_GrayScale/imgs',
+        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_GAZE_PLUS_640_480_MaskFilter_05_40_GrayScale/predict',
+    )
+    # 6
+    run_unet_predict_process_folder(
+        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_HandOverFace_640_480_MaskFilter_05_40_GrayScale/imgs',
+        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_HandOverFace_640_480_MaskFilter_05_40_GrayScale/predict',
+    )
 
-    run_unet_predict_process_folder('test_data/origin_imgs', 'test_data/predict_imgs')
-
+    # run_unet_predict_process_folder('test_data/origin_imgs', 'test_data/predict_imgs')
     # calculate_unet_metrics('test_data/predict_imgs', 'test_data/ground_truths')
-    # img = cv2.imread('test_data/origin_imgs/img_00009.png', cv2.IMREAD_UNCHANGED)
-    # print(img.shape)
