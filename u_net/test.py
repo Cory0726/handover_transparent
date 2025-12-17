@@ -161,7 +161,7 @@ def calculate_unet_metrics(pred_dir, gt_dir, threshold=127):
     }
     result_file_name = 'test_result/result.json'
     with open(result_file_name, 'w') as f:
-        json.dump(result, f)
+        json.dump(result, f, indent=4)
         print(f'Saved : {result_file_name}')
 
 if __name__ == "__main__":
