@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 from PIL import Image
 import os, glob
+from tqdm import tqdm
 
 def depth_to_color(depth):
     """Normalize depth to 0~255 and apply a colormap for visualization."""
@@ -517,5 +518,53 @@ def apply_mask_keep_black(img, mask):
 
     return output
 
+def center_crop_to_square(input_folder, output_folder):
+    """
+    Reads images from input_folder, crops them to a square based on the shorter side
+    from the center, and saves them to output_folder.
+    """
+
+    # 建立輸出資料夾 (Create output directory if it doesn't exist)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+        print(f"Created directory: {output_folder}")
+
+    # 支援的檔案格式 (Supported image extensions)
+    valid_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.tiff')
+
+    # 取得所有影像檔案清單
+    image_files = [f for f in os.listdir(input_folder) if f.lower().endswith(valid_extensions)]
+
+    print(f"Found {len(image_files)} images. Starting cropping...")
+
+    for filename in tqdm(image_files):
+        img_path = os.path.join(input_folder, filename)
+
+        try:
+            with Image.open(img_path) as img:
+                width, height = img.size
+
+                # 決定短邊長度 (Determine the shorter side)
+                min_dim = min(width, height)
+
+                # 計算裁切邊界 (Calculate cropping coordinates for the center)
+                # left, top, right, bottom
+                left = (width - min_dim) / 2
+                top = (height - min_dim) / 2
+                right = (width + min_dim) / 2
+                bottom = (height + min_dim) / 2
+
+                # 執行裁切 (Perform the crop)
+                # The crop() method takes a tuple (left, top, right, bottom)
+                img_square = img.crop((left, top, right, bottom))
+
+                # 儲存結果 (Save the result)
+                save_path = os.path.join(output_folder, filename)
+                img_square.save(save_path, quality=95)  # Keep high quality
+
+        except Exception as e:
+            print(f"Error processing {filename}: {e}")
+
 def array_info(arr):
     return f'Shape{arr.shape}, Max: {arr.max():f}, Min: {arr.min():f}, Avg: {arr.mean():f}, {arr.dtype}'
+
