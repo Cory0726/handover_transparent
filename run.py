@@ -15,6 +15,12 @@ def run_tof_data_grab_process():
          '--heatmap', 'data/tof_depth_heatmap.png'], check=True
     )
 
+def run_rgb_data_grab_process():
+    subprocess.run(
+        ['python', 'rgb_cam/rgb_data_grab.py',
+         '--rgb', 'data/rgb_img.png'], check=True
+    )
+
 def save_intensity_to_grayscale(img_path):
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
     output_img_path = 'data/tof_intensity_grayscale.png'
@@ -56,15 +62,19 @@ def main():
     # Initialize the log.
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     # Wait 5 second for start
-    logging.info('Wait 3 seconds for start...')
-    time.sleep(3)  #  unit : second
+    logging.info('Wait 5 seconds for start...')
+    time.sleep(5)  #  unit : second
 
     start_time = time.time()
 
-    # From ToF Camera, grabbing the intensity image and depth image.
-    # logging.info('Grabbing ToF data...')
+    # logging.info('Grabbing Image data...')
+    # ToF Camera
     # run_tof_data_grab_process()
+    # RGB Camera
+    # run_rgb_data_grab_process()
+    # GrayScale
     # save_intensity_to_grayscale('data/tof_intensity.png')
+
 
     # U-Net hand segmentation
     logging.info('Running U-Net model...')

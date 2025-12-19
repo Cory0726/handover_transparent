@@ -1,6 +1,5 @@
 import os
 import shutil
-import cv2
 from pathlib import Path
 import tools_box
 from matchcheck_imgs_masks import sync_imgs_masks
