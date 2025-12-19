@@ -1,14 +1,15 @@
 import os
 import shutil
 import cv2
-
+from pathlib import Path
 import tools_box
+from matchcheck_imgs_masks import sync_imgs_masks
 
-dir_home = 'Origin'
-dir = ['Origin_EgoHands', 'Origin_EgoYouTubeHands', 'Origin_EGTEA_GAZE_PLUS', 'Origin_GTEA', 'Origin_GTEA_GAZE_PLUS', 'Origin_HandOverFace']
 
-def main():
-
+def dataset_processing():
+    dir_home = 'Origin'
+    dir = ['Origin_EgoHands', 'Origin_EgoYouTubeHands', 'Origin_EGTEA_GAZE_PLUS', 'Origin_GTEA',
+           'Origin_GTEA_GAZE_PLUS', 'Origin_HandOverFace']
     for i in range(6):
         dir[i] = f'{dir_home}/{dir[i]}'
         # Crop(Imgs and Masks)
@@ -46,10 +47,10 @@ def main():
         os.rename(f'{dir[i]}/imgs_grayscale', f'{dir[i]}/imgs')
         os.rename(f'{dir[i]}/masks_resized', f'{dir[i]}/masks')
 
-
-
-def main_2():
-
+def move2integation():
+    dir_home = 'Origin'
+    dir = ['Origin_EgoHands', 'Origin_EgoYouTubeHands', 'Origin_EGTEA_GAZE_PLUS', 'Origin_GTEA',
+           'Origin_GTEA_GAZE_PLUS', 'Origin_HandOverFace']
     dir_output = 'Process_All_Hands_480_480_MaskFilter_02_40_GrayScale'
 
     for i in range (6):
@@ -72,4 +73,7 @@ def main_2():
         )
 
 if __name__ == '__main__':
-    main_2()
+    dir_path = Path('c:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/GrayScale_Size640480_MF0540')
+
+    for dir in dir_path.iterdir():
+        sync_imgs_masks(dir, dry_run=True)
