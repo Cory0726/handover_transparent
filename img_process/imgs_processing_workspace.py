@@ -73,4 +73,4 @@ def move2integation():
         )
 
 if __name__ == '__main__':
-    move2integation()
+    sync_imgs_masks('Process_HandWithArms_480_480_MaskFilter_02_40_GrayScale')
