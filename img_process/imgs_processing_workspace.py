@@ -47,11 +47,11 @@ def dataset_processing():
         os.rename(f'{dir[i]}/masks_resized', f'{dir[i]}/masks')
 
 def move2integation():
-    dir = ['Process_EGTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale',
-           'Process_GTEA_480_480_MaskFilter_02_40_GrayScale',
-           'Process_GTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale']
+    dir = ['Process_EgoHands_480_480_MaskFilter_02_40_GrayScale',
+           'Process_EgoYouTubeHands_480_480_MaskFilter_02_40_GrayScale',
+           'Process_HandOverFace_480_480_MaskFilter_02_40_GrayScale']
 
-    dir_output = 'Process_HandWithArms_480_480_MaskFilter_02_40_GrayScale'
+    dir_output = 'Process_Hands_480_480_MaskFilter_02_40_GrayScale'
 
     for i in range (3):
         dir[i] = f'{dir[i]}'
@@ -73,4 +73,5 @@ def move2integation():
         )
 
 if __name__ == '__main__':
-    sync_imgs_masks('Process_HandWithArms_480_480_MaskFilter_02_40_GrayScale')
+    # move2integation()
+    sync_imgs_masks('Process_Hands_480_480_MaskFilter_02_40_GrayScale')
