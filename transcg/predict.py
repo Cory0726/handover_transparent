@@ -39,7 +39,7 @@ def main(img_path, depth_path):
     depth_refine, depth_ori = inferencer.inference(
         rgb=norm_fake_rgb,
         depth=depth_m,
-        target_size=(640, 480),
+        target_size=(480, 480),
         depth_coefficient=5.0,
         inpainting=True,
     )

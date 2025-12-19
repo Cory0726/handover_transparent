@@ -21,7 +21,7 @@ def predict_da3_depth(da3_model, img, focal_length):
     # For model "DA3METRIC-LARGE", use `metric_depth = focal * net_output / 300`
     rawdepth = (prediction.depth[0] * focal_length) / 300
     # Re-size to the input resolution
-    raw_depth = cv2.resize(rawdepth,(640,480),interpolation=cv2.INTER_LINEAR)
+    raw_depth = cv2.resize(rawdepth,(480,480),interpolation=cv2.INTER_LINEAR)
     return raw_depth
 
 def calibrate_depth_ransac(

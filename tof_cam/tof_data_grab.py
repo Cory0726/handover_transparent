@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from pypylon import pylon
 
+
 def create_basler_cam(serial_number: str) -> pylon.InstantCamera:
     """
     Create a Basler camera instance by serial number.
@@ -119,6 +120,17 @@ def grab_one_intensity_depth():
     result_container = split_tof_container_data(grab_result.GetDataContainer())
     return result_container["Intensity_Image"], result_container["Point_Cloud"]
 
+def center_crop_img2square(img: np.ndarray) -> np.ndarray:
+    h, w = img.shape[:2]
+    min_dim = min(h, w)
+
+    top = (h - min_dim) // 2
+    left = (w - min_dim) // 2
+    bottom = top + min_dim
+    right = left + min_dim
+
+    return img[top:bottom, left:right]
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Grab ToF camera data.')
     parser.add_argument('--intensity', type=str)
@@ -131,6 +143,9 @@ def main(intensity_img_path, depth_img_path, depth_heatmap_path) -> None:
     # Grab one ToF data
     intensity_img, pcl = grab_one_intensity_depth()
     depth_img = pcl_to_rawdepth(pcl)
+    # Crop the image from (640, 480) to (480, 480)
+    intensity_img = center_crop_img2square(intensity_img)
+    depth_img = center_crop_img2square(depth_img)
     # Save intensity image
     cv2.imwrite(intensity_img_path, intensity_img)
     print(f'Saved {intensity_img_path}')

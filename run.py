@@ -114,4 +114,6 @@ def reset_robot_state():
 if __name__ == '__main__':
     # main()
     # reset_robot_state()
-    run_gr_convnet_predict_process()
+    # run_gr_convnet_predict_process()
+    from img_process.tools_box import center_crop_img2square
+    img = cv2.imread('data/tof_intensity_grayscale.png')
