@@ -47,13 +47,14 @@ def dataset_processing():
         os.rename(f'{dir[i]}/masks_resized', f'{dir[i]}/masks')
 
 def move2integation():
-    dir_home = 'Origin'
-    dir = ['Origin_EgoHands', 'Origin_EgoYouTubeHands', 'Origin_EGTEA_GAZE_PLUS', 'Origin_GTEA',
-           'Origin_GTEA_GAZE_PLUS', 'Origin_HandOverFace']
-    dir_output = 'Process_All_Hands_480_480_MaskFilter_02_40_GrayScale'
+    dir = ['Process_EGTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale',
+           'Process_GTEA_480_480_MaskFilter_02_40_GrayScale',
+           'Process_GTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale']
 
-    for i in range (6):
-        dir[i] = f'{dir_home}/{dir[i]}'
+    dir_output = 'Process_HandWithArms_480_480_MaskFilter_02_40_GrayScale'
+
+    for i in range (3):
+        dir[i] = f'{dir[i]}'
         dir_items = os.listdir(f'{dir_output}/imgs')
         total_dir_items = len(dir_items)
         print(f'Total dir items: {total_dir_items}')
@@ -72,7 +73,4 @@ def move2integation():
         )
 
 if __name__ == '__main__':
-    dir_path = Path('c:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/GrayScale_Size640480_MF0540')
-
-    for dir in dir_path.iterdir():
-        sync_imgs_masks(dir, dry_run=True)
+    move2integation()
