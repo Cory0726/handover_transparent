@@ -121,7 +121,7 @@ def main(input_img_path, output_img_path, model_path):
         img_bright = enhancer.enhance(b)
 
         # Save images at different brightness levels
-        temp_img_path = f'test_data/img_process_temp/img_brightness_{int(b*100):3d}.png'
+        temp_img_path = f'test_img_process_temp/img_brightness_{int(b*100):3d}.png'
         img_bright.save(temp_img_path)
         print(f'Saved: {temp_img_path}')
 
