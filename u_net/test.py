@@ -45,7 +45,7 @@ def run_unet_predict_process_folder(input_folder, output_folder):
             # 呼叫原本的 predict.py
             subprocess.run(
                 args=[
-                    'python', 'test_predict.py',
+                    'python', 'test_predict_once.py',
                     '--input', img_path,  # 傳入單張圖片路徑
                     '--output', save_path,
                     '--model', 'Hand_Seg_HandWithArms_S480480G_F0240_S1_Ep36_Score090095_20251220.pth',
@@ -168,15 +168,15 @@ if __name__ == "__main__":
     dir_list = ['Process_EGTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale',
                 'Process_GTEA_480_480_MaskFilter_02_40_GrayScale',
                 'Process_GTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale']
-    # for dir in dir_list:
-    #     run_unet_predict_process_folder(
-    #         input_folder=f'{dir_home}/{dir}/imgs',
-    #         output_folder=f'{dir_home}/{dir}/predict',
-    #     )
-
     for dir in dir_list:
-        calculate_unet_metrics(
-            pred_dir=f'{dir_home}/{dir}/predict',
-            gt_dir=f'{dir_home}/{dir}/masks',
-            result_file_name=f'test_result/{dir}_result.json',
+        run_unet_predict_process_folder(
+            input_folder=f'{dir_home}/{dir}/imgs',
+            output_folder=f'{dir_home}/{dir}/predict_once',
         )
+
+    # for dir in dir_list:
+    #     calculate_unet_metrics(
+    #         pred_dir=f'{dir_home}/{dir}/predict',
+    #         gt_dir=f'{dir_home}/{dir}/masks',
+    #         result_file_name=f'test_result/{dir}_result.json',
+    #     )
