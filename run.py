@@ -32,7 +32,7 @@ def run_unet_predict_process():
         ['python', 'u_net/predict.py',
          '--input', 'data/tof_intensity_grayscale.png',
          '--output', 'data/unet_hand_mask.png',
-         '--model', 'u_net/Hand_Seg_EGTEA_plus_S640480G_Scale05_Score08994_20251123.pth'], check=True
+         '--model', 'u_net/Hand_Seg_HandWithArms_S480480G_F0240_S1_Ep36_Score090095_20251220.pth'], check=True
     )
 
 def run_da3_predict_process():
@@ -112,8 +112,4 @@ def reset_robot_state():
 
 
 if __name__ == '__main__':
-    # main()
-    # reset_robot_state()
-    # run_gr_convnet_predict_process()
-    from img_process.tools_box import center_crop_img2square
-    img = cv2.imread('data/tof_intensity_grayscale.png')
+    run_unet_predict_process()

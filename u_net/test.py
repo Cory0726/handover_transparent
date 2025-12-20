@@ -48,7 +48,7 @@ def run_unet_predict_process_folder(input_folder, output_folder):
                     'python', 'test_predict.py',
                     '--input', img_path,  # 傳入單張圖片路徑
                     '--output', save_path,
-                    '--model', 'Hand_Seg_EGTEA_plus_S640480G_Scale05_Score08994_20251123.pth',
+                    '--model', 'Hand_Seg_HandWithArms_S480480G_F0240_S1_Ep36_Score090095_20251220.pth',
                 ],
                 check=True
             )
@@ -163,81 +163,13 @@ def calculate_unet_metrics(pred_dir, gt_dir, result_file_name, threshold=127):
         json.dump(result, f, indent=4)
         print(f'Saved : {result_file_name}\n\n')
 
-def run_unet_predict_set():
-    # ==================================================
-    # Run U-Net predict
-    # ==================================================
-    # 1
-    run_unet_predict_process_folder(
-        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoHands_640_480_MaskFilter_05_40_GrayScale/imgs',
-        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoHands_640_480_MaskFilter_05_40_GrayScale/predict',
-    )
-    # 2
-    run_unet_predict_process_folder(
-        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoYouTubeHands_640_480_MaskFilter_05_40_GrayScale/imgs',
-        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoYouTubeHands_640_480_MaskFilter_05_40_GrayScale/predict',
-    )
-    # 3
-    run_unet_predict_process_folder(
-        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EGTEA_Gaze_plus_640_480_MaskFilter_05_40_GrayScale/imgs',
-        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EGTEA_Gaze_plus_640_480_MaskFilter_05_40_GrayScale/predict',
-    )
-    # 4
-    run_unet_predict_process_folder(
-        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_640_480_MaskFilter_05_40_GrayScale/imgs',
-        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_640_480_MaskFilter_05_40_GrayScale/predict',
-    )
-    # 5
-    run_unet_predict_process_folder(
-        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_GAZE_PLUS_640_480_MaskFilter_05_40_GrayScale/imgs',
-        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_GAZE_PLUS_640_480_MaskFilter_05_40_GrayScale/predict',
-    )
-    # 6
-    run_unet_predict_process_folder(
-        input_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_HandOverFace_640_480_MaskFilter_05_40_GrayScale/imgs',
-        output_folder='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_HandOverFace_640_480_MaskFilter_05_40_GrayScale/predict',
-    )
-
-def cal_unet_metric_set():
-    # ==================================================
-    # Calculate the U-Net metrics
-    # ==================================================
-    # 1
-    calculate_unet_metrics(
-        pred_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoHands_640_480_MaskFilter_05_40_GrayScale/predict',
-        gt_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoHands_640_480_MaskFilter_05_40_GrayScale/masks',
-        result_file_name='test_result/EgoHands_result.json'
-    )
-    # 2
-    calculate_unet_metrics(
-        pred_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoYouTubeHands_640_480_MaskFilter_05_40_GrayScale/predict',
-        gt_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EgoYouTubeHands_640_480_MaskFilter_05_40_GrayScale/masks',
-        result_file_name='test_result/EgoYouTubeHands_result.json'
-    )
-    # 3
-    calculate_unet_metrics(
-        pred_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EGTEA_Gaze_plus_640_480_MaskFilter_05_40_GrayScale/predict',
-        gt_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_EGTEA_Gaze_plus_640_480_MaskFilter_05_40_GrayScale/masks',
-        result_file_name='test_result/EGTEA_Gaze_plus_result.json'
-    )
-    # 4
-    calculate_unet_metrics(
-        pred_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_640_480_MaskFilter_05_40_GrayScale/predict',
-        gt_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_640_480_MaskFilter_05_40_GrayScale/masks',
-        result_file_name='test_result/GTEA_result.json'
-    )
-    # 5
-    calculate_unet_metrics(
-        pred_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_GAZE_PLUS_640_480_MaskFilter_05_40_GrayScale/predict',
-        gt_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_GTEA_GAZE_PLUS_640_480_MaskFilter_05_40_GrayScale/masks',
-        result_file_name='test_result/GTEA_GAZE_PLUS_result.json'
-    )
-    # 6
-    calculate_unet_metrics(
-        pred_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_HandOverFace_640_480_MaskFilter_05_40_GrayScale/predict',
-        gt_dir='C:/Users/lkfu5/PycharmProjects/Dataset/Dataset_Hand/Process_HandOverFace_640_480_MaskFilter_05_40_GrayScale/masks',
-        result_file_name='test_result/HandOverFace_result.json'
-    )
-
 if __name__ == "__main__":
-    cal_unet_metric_set()
+    dir_home = 'C:/Users/User/PycharmProjects/Dataset'
+    dir_list = ['Process_EGTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale',
+                'Process_GTEA_480_480_MaskFilter_02_40_GrayScale',
+                'Process_GTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale']
+    for dir in dir_list:
+        run_unet_predict_process_folder(
+            input_folder=f'{dir_home}/{dir}/imgs',
+            output_folder=f'{dir_home}/{dir}/predict',
+        )

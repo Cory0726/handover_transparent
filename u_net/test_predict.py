@@ -137,7 +137,7 @@ def main(input_img_path, output_img_path, model_path):
         )
 
         # Save masks at different brightness levels
-        temp_mask_path = f'test_data/img_process_temp/mask_brightness_{int(b*100):3d}.png'
+        temp_mask_path = f'test_img_process_temp/mask_brightness_{int(b*100):3d}.png'
         result_mask.save(temp_mask_path)
         print(f'Saved: {temp_mask_path}')
 
