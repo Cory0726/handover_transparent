@@ -168,8 +168,15 @@ if __name__ == "__main__":
     dir_list = ['Process_EGTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale',
                 'Process_GTEA_480_480_MaskFilter_02_40_GrayScale',
                 'Process_GTEA_GAZE_PLUS_480_480_MaskFilter_02_40_GrayScale']
+    # for dir in dir_list:
+    #     run_unet_predict_process_folder(
+    #         input_folder=f'{dir_home}/{dir}/imgs',
+    #         output_folder=f'{dir_home}/{dir}/predict',
+    #     )
+
     for dir in dir_list:
-        run_unet_predict_process_folder(
-            input_folder=f'{dir_home}/{dir}/imgs',
-            output_folder=f'{dir_home}/{dir}/predict',
+        calculate_unet_metrics(
+            pred_dir=f'{dir_home}/{dir}/predict',
+            gt_dir=f'{dir_home}/{dir}/masks',
+            result_file_name=f'test_result/{dir}_result.json',
         )

@@ -1,0 +1,6 @@
+{
+    "imgs_number": 8455,
+    "mIoU": 0.8674525804353621,
+    "Dice_Coefficient": 0.9246664180653578,
+    "Pixel_Accuracy": 0.9872892200949471
+}
