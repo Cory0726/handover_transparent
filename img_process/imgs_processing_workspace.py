@@ -48,12 +48,12 @@ def dataset_processing():
 
 def move2integation():
     dir = ['Process_EgoHands_480_480_MaskFilter_02_40_GrayScale',
-           'Process_EgoYouTubeHands_480_480_MaskFilter_02_40_GrayScale',
-           'Process_HandOverFace_480_480_MaskFilter_02_40_GrayScale']
+           'Process_EgoYouTubeHands_480_480_MaskFilter_02_40_GrayScale'
+    ]
 
-    dir_output = 'Process_Hands_480_480_MaskFilter_02_40_GrayScale'
+    dir_output = 'Process_Hands_withoutHandOverFace_480_480_MaskFilter_02_40_GrayScale'
 
-    for i in range (3):
+    for i in range (2):
         dir[i] = f'{dir[i]}'
         dir_items = os.listdir(f'{dir_output}/imgs')
         total_dir_items = len(dir_items)
@@ -74,4 +74,4 @@ def move2integation():
 
 if __name__ == '__main__':
     # move2integation()
-    sync_imgs_masks('Process_Hands_480_480_MaskFilter_02_40_GrayScale')
+    sync_imgs_masks('Process_Hands_withoutHandOverFace_480_480_MaskFilter_02_40_GrayScale')
