@@ -73,5 +73,7 @@ def move2integation():
         )
 
 if __name__ == '__main__':
-    # move2integation()
-    sync_imgs_masks('Process_Hands_withoutHandOverFace_480_480_MaskFilter_02_40_GrayScale')
+    tools_box.center_crop_to_square(
+        input_folder='temp_img_input',
+        output_folder='temp_img_output',
+    )
