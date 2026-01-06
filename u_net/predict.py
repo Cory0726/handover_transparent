@@ -114,7 +114,7 @@ def main(input_img_path, output_img_path, model_path):
     final_mask_np = None
 
     # Adjust the brightness of the image 65 - 95 %
-    brightness_levels = [i/100 for i in range(65, 96, 5)]
+    brightness_levels = [i/100 for i in range(105, 110, 1)]
     print(f'brightness_levels: {brightness_levels} %')
     print(f'Loaded model : {model_path}, U-Net model predicting...')
     for b in brightness_levels:

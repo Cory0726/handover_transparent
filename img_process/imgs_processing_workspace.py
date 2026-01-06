@@ -73,13 +73,30 @@ def move2integation():
         )
 
 if __name__ == '__main__':
-    # tools_box.resize_and_convert_image(
-    #     input_folder='temp_img_input',
-    #     output_folder='temp_img_output',
-    #     target_size=(640, 480),
+
+    # tools_box.rename_and_move_files(
+    #     input_dir='temp_output',
+    #     output_dir='out',
+    #     start_num=124,
     # )
 
-    tools_box.center_crop_to_square(
-        input_folder='temp_img_input',
-        output_folder='temp_img_output',
+    # tools_box.resize_and_convert_image(
+    #     input_folder='temp',
+    #     output_folder='temp_temp',
+    #     target_size=(640, 480),
+    # )
+    #
+    # tools_box.center_crop_to_square(
+    #     input_folder='temp_temp',
+    #     output_folder='temp_output',
+    # )
+
+    # tools_box.convert_folder_to_grayscale(
+    #     input_dir='temp',
+    #     output_dir='temp_out',
+    # )
+    tools_box.binarize_images(
+        input_dir='temp',
+        output_dir='temp_out',
+        threshold=254
     )

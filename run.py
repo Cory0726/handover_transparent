@@ -29,11 +29,10 @@ def save_intensity_to_grayscale(img_path):
 
 def run_unet_predict_process():
     subprocess.run(
-        ['python', 'u_net/test_predict_once.py',
+        ['python', 'u_net/predict.py',
          # '--input', 'data/tof_intensity_grayscale.png',
-         '--input', 'temp_img/GTEA_G_img.png',
-         # '--output', 'data/unet_hand_mask.png',
-         '--output', 'temp_img/GTEA_G_img.png',
+         '--input', 'data/temp_test.png',
+         '--output', 'data/unet_hand_mask.png',
          '--model', 'u_net/Hand_Seg_HandWithArms_S480480G_F0240_S1_Ep36_Score090095_20251220.pth'], check=True
     )
 
@@ -63,49 +62,47 @@ def run_gr_convnet_predict_process():
 def main():
     # Initialize the log.
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+
     # Wait 5 second for start
     logging.info('Wait 5 seconds for start...')
     time.sleep(5)  #  unit : second
 
     start_time = time.time()
 
-    # logging.info('Grabbing Image data...')
-    # ToF Camera
-    # run_tof_data_grab_process()
-    # RGB Camera
-    # run_rgb_data_grab_process()
-    # GrayScale
-    # save_intensity_to_grayscale('data/tof_intensity.png')
-
+    # Grab ToF and RGB Camera data
+    logging.info('Grabbing Image data...')
+    run_tof_data_grab_process()
+    run_rgb_data_grab_process()
+    save_intensity_to_grayscale('data/tof_intensity.png')  # Grayscale
 
     # U-Net hand segmentation
     logging.info('Running U-Net model...')
     run_unet_predict_process()
 
-    # Depth-Anything-3
-    logging.info('Running DA3 model...')
-    run_da3_predict_process()
-
-    # TransCG
-    # logging.info('Running TransCG model...')
-    # run_transcg_predict_process()
-
-    # GR-ConvNet
-    logging.info('Running GR-ConvNet model...')
-    run_gr_convnet_predict_process()
-
-    # Get the grasp point pose (Pick point)
-    logging.info('Start grasping...')
-    grasp_pose = get_grasp_pose()
-    show_pose('Grasp Pose', grasp_pose)
-    # Set the place point
-    origin_point = [-400.1218, 12.36882, 636.417, -176.5101, 51.12951, 19.41987]
-
-    # Execute grasping
-    # tmrobot = TMRobot('192.168.50.49')
-    # tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
-    end_time = time.time()
-    logging.info(f'Finished in {end_time - start_time} seconds')
+    # # Depth-Anything-3
+    # logging.info('Running DA3 model...')
+    # run_da3_predict_process()
+    #
+    # # TransCG
+    # # logging.info('Running TransCG model...')
+    # # run_transcg_predict_process()
+    #
+    # # GR-ConvNet
+    # logging.info('Running GR-ConvNet model...')
+    # run_gr_convnet_predict_process()
+    #
+    # # Get the grasp point pose (Pick point)
+    # logging.info('Start grasping...')
+    # grasp_pose = get_grasp_pose()
+    # show_pose('Grasp Pose', grasp_pose)
+    # # Set the place point
+    # origin_point = [-400.1218, 12.36882, 636.417, -176.5101, 51.12951, 19.41987]
+    #
+    # # Execute grasping
+    # # tmrobot = TMRobot('192.168.50.49')
+    # # tmrobot.pick_and_place(pick_point=grasp_pose, place_point=origin_point)
+    # end_time = time.time()
+    # logging.info(f'Finished in {end_time - start_time} seconds')
 
 def reset_robot_state():
     robot = TMRobot('192.168.50.49')
