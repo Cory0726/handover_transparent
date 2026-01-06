@@ -29,9 +29,11 @@ def save_intensity_to_grayscale(img_path):
 
 def run_unet_predict_process():
     subprocess.run(
-        ['python', 'u_net/predict.py',
-         '--input', 'data/tof_intensity_grayscale.png',
-         '--output', 'data/unet_hand_mask.png',
+        ['python', 'u_net/test_predict_once.py',
+         # '--input', 'data/tof_intensity_grayscale.png',
+         '--input', 'temp_img/GTEA_G_img.png',
+         # '--output', 'data/unet_hand_mask.png',
+         '--output', 'temp_img/GTEA_G_img.png',
          '--model', 'u_net/Hand_Seg_HandWithArms_S480480G_F0240_S1_Ep36_Score090095_20251220.pth'], check=True
     )
 
