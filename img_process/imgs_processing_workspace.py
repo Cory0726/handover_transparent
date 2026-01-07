@@ -81,22 +81,22 @@ if __name__ == '__main__':
     # )
 
     # tools_box.resize_and_convert_image(
-    #     input_folder='temp',
-    #     output_folder='temp_temp',
+    #     input_folder='temp_temp',
+    #     output_folder='temp_out',
     #     target_size=(640, 480),
     # )
-    #
-    # tools_box.center_crop_to_square(
-    #     input_folder='temp_temp',
-    #     output_folder='temp_output',
-    # )
+
+    tools_box.center_crop_to_square(
+        input_folder='temp',
+        output_folder='temp_output',
+    )
 
     # tools_box.convert_folder_to_grayscale(
     #     input_dir='temp',
     #     output_dir='temp_out',
     # )
-    tools_box.binarize_images(
-        input_dir='temp',
-        output_dir='temp_out',
-        threshold=254
-    )
+    # tools_box.binarize_images(
+    #     input_dir='temp',
+    #     output_dir='temp_out',
+    #     threshold=254
+    # )
