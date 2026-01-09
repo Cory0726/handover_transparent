@@ -78,6 +78,12 @@ def calibrate_depth_ransac(
     D_da3_calibrated = a * D_da3 + b
     return D_da3_calibrated , valid_mask
 
+def rawdepth_to_heatmap(rawdepth):
+    gray_img = cv2.normalize(rawdepth, None, 0,255, cv2.NORM_MINMAX).astype(np.uint8)
+    heatmap = cv2.applyColorMap(255 - gray_img, cv2.COLORMAP_TURBO)
+    # heatmap = cv2.applyColorMap(255 - gray_img, cv2.COLORMAP_JET)
+    return heatmap
+
 def depth_to_color(depth):
     """Normalize depth to 0~255 and apply a colormap for visualization."""
     depth_vis = depth.copy()
@@ -98,7 +104,7 @@ def depth_to_color(depth):
 
     depth_norm = np.clip((depth_vis - d_min) / (d_max - d_min), 0, 1)
     depth_8u = (depth_norm * 255).astype(np.uint8)
-    depth_color = cv2.applyColorMap(depth_8u, cv2.COLORMAP_JET)
+    depth_color = cv2.applyColorMap(255 - depth_8u, cv2.COLORMAP_TURBO)
     return depth_color
 
 def main(input_img_file, tof_depth_file, hand_seg_mask_file, cam_matrix_file):
@@ -134,7 +140,7 @@ def main(input_img_file, tof_depth_file, hand_seg_mask_file, cam_matrix_file):
     print(f'Saved : {save_file_name}')
     # Save the predicted depth heatmap
     save_file_name = 'data/da3_predicted_depth_heatmap.png'
-    cv2.imwrite(save_file_name, depth_to_color(predicted_depth))
+    cv2.imwrite(save_file_name, rawdepth_to_heatmap(predicted_depth))
     print(f'Saved : {save_file_name}')
 
     # ==================================================
@@ -154,7 +160,7 @@ def main(input_img_file, tof_depth_file, hand_seg_mask_file, cam_matrix_file):
     print(f'Save : data/da3_cal_depth')
     # Save the calibrated depth heatmap
     save_file_name = 'data/da3_cal_depth_heatmap.png'
-    calibrate_depth_heatmap = depth_to_color(calibrate_depth)
+    calibrate_depth_heatmap = rawdepth_to_heatmap(calibrate_depth)
     cv2.imwrite(save_file_name, calibrate_depth_heatmap)
     print(f'Saved : {save_file_name}')
     # Save the calibrated depth heatmap with segmentation

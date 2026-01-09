@@ -63,32 +63,32 @@ def main():
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
     # Wait 5 second for start
-    logging.info('Wait 5 seconds for start...')
-    time.sleep(5)  #  unit : second
-
-    start_time = time.time()
+    # logging.info('Wait 5 seconds for start...')
+    # time.sleep(5)  #  unit : second
+    #
+    # start_time = time.time()
 
     # Grab ToF and RGB Camera data
-    logging.info('Grabbing Image data...')
-    run_tof_data_grab_process()
-    run_rgb_data_grab_process()
+    # logging.info('Grabbing Image data...')
+    # run_tof_data_grab_process()
+    # run_rgb_data_grab_process()
     save_intensity_to_grayscale('data/tof_intensity.png')  # Grayscale
 
     # U-Net hand segmentation
-    # logging.info('Running U-Net model...')
-    # run_unet_predict_process()
+    logging.info('Running U-Net model...')
+    run_unet_predict_process()
 
-    # # Depth-Anything-3
-    # logging.info('Running DA3 model...')
-    # run_da3_predict_process()
-    #
+    # Depth-Anything-3
+    logging.info('Running DA3 model...')
+    run_da3_predict_process()
+
     # # TransCG
     # # logging.info('Running TransCG model...')
     # # run_transcg_predict_process()
     #
     # # GR-ConvNet
-    # logging.info('Running GR-ConvNet model...')
-    # run_gr_convnet_predict_process()
+    logging.info('Running GR-ConvNet model...')
+    run_gr_convnet_predict_process()
     #
     # # Get the grasp point pose (Pick point)
     # logging.info('Start grasping...')
@@ -110,4 +110,16 @@ def reset_robot_state():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    # tof_depth_heatmap = cv2.imread('data/tof_depth_heatmap.png')
+    # valid_mask = cv2.imread('data/unet_hand_mask.png', cv2.IMREAD_UNCHANGED)
+    # valid_mask = (valid_mask == 255).astype(np.uint8)
+    # for i in range(3):
+    #     tof_depth_heatmap[:, :, i] = tof_depth_heatmap[:, :, i] * valid_mask
+    # save_file_name = 'data/test.png'
+    # cv2.imwrite(save_file_name, tof_depth_heatmap)
+    # print(f'Saved : {save_file_name}')
+
+    img = cv2.imread('data/3_trans_c_o_depth.png', cv2.IMREAD_GRAYSCALE)
+    cv2.imshow('img', img)
+    cv2.waitKey(0)

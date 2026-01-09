@@ -223,8 +223,8 @@ def plot_depth_with_grasp(depth_img,mask_img, grasp_q_img, grasp_angle_img, crop
             if g.width < 200:  # unit : mm
                 print(f'Grasp center: {(g.center[0], g.center[1])}, angle: {g.angle} rad, width: {g.width} mm,' \
                   f'q score: {q_score}')
-                g.length = g.length / 2
-                g.width = g.width / 3
+                # g.length = g.length / 2
+                # g.width = g.width / 3
                 g.plot(ax)
                 break
 

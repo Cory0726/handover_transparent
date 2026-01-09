@@ -8,6 +8,12 @@ from inference.post_process import post_process_output
 from utils.data.camera_data import CameraData
 from utils.visualisation.plot import plot_depth_with_grasp
 
+def rawdepth_to_heatmap(rawdepth):
+    gray_img = cv2.normalize(rawdepth, None, 0,255, cv2.NORM_MINMAX).astype(np.uint8)
+    heatmap = cv2.applyColorMap(255 - gray_img, cv2.COLORMAP_TURBO)
+    # heatmap = cv2.applyColorMap(255 - gray_img, cv2.COLORMAP_JET)
+    return heatmap
+
 def vis_heatmap(img:np.ndarray):
     img = cv2.normalize(img, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX).astype(np.uint8)
     return img
@@ -49,7 +55,7 @@ def main(depth_path, mask_path):
     # ==================================================
     # Default crop size = 224
     # The closer the size is to 224, the better the performance.
-    crop_size = 224  # Default crop_size = 224,
+    crop_size = 272  # Default crop_size = 224,
     depth_data = CameraData(output_size=crop_size)
     x, crop_depth_mask = depth_data.get_data(depth_mask)
     print(f'Crop depth with mask : {crop_depth_mask.shape}, {crop_depth_mask.dtype}, {crop_depth_mask.max()}, {crop_depth_mask.min()}')
@@ -72,14 +78,14 @@ def main(depth_path, mask_path):
     # ==================================================
     # Save the result
     # ==================================================
-    cv2.imwrite('data/grconv_crop_depth_with_mask.png', vis_heatmap(crop_depth_mask))
+    cv2.imwrite('data/grconv_crop_depth_with_mask.png', rawdepth_to_heatmap(crop_depth_mask))
     cv2.imwrite('data/grconv_crop_depth_with_mask_heatmap.png', depth_to_color(crop_depth_mask))
     cv2.imwrite('data/grconv_crop_mask.png', crop_mask)
-    cv2.imwrite('data/grconv_q_img.png', vis_heatmap(q_img))
+    cv2.imwrite('data/grconv_q_img.png', rawdepth_to_heatmap(q_img))
     cv2.imwrite('data/grconv_q_img_heatmap.png', depth_to_color(q_img))
-    cv2.imwrite('data/grconv_ang_img.png', vis_heatmap(ang_img))
+    cv2.imwrite('data/grconv_ang_img.png', rawdepth_to_heatmap(ang_img))
     cv2.imwrite('data/grconv_ang_img_heatmap.png', depth_to_color(ang_img))
-    cv2.imwrite('data/grconv_width_img.png', vis_heatmap(width_img))
+    cv2.imwrite('data/grconv_width_img.png', rawdepth_to_heatmap(width_img))
     cv2.imwrite('data/grconv_width_img_heatmap.png', depth_to_color(width_img))
     # Plot the grasp rectangle on the depth image
     depth = depth.squeeze()
