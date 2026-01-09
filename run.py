@@ -30,8 +30,7 @@ def save_intensity_to_grayscale(img_path):
 def run_unet_predict_process():
     subprocess.run(
         ['python', 'u_net/predict.py',
-         # '--input', 'data/tof_intensity_grayscale.png',
-         '--input', 'data/temp_test.png',
+         '--input', 'data/tof_intensity_grayscale.png',
          '--output', 'data/unet_hand_mask.png',
          '--model', 'u_net/Hand_Seg_HandWithArms_S480480G_F0240_S1_Ep36_Score090095_20251220.pth'], check=True
     )
@@ -76,8 +75,8 @@ def main():
     save_intensity_to_grayscale('data/tof_intensity.png')  # Grayscale
 
     # U-Net hand segmentation
-    logging.info('Running U-Net model...')
-    run_unet_predict_process()
+    # logging.info('Running U-Net model...')
+    # run_unet_predict_process()
 
     # # Depth-Anything-3
     # logging.info('Running DA3 model...')
@@ -111,4 +110,4 @@ def reset_robot_state():
 
 
 if __name__ == '__main__':
-    run_unet_predict_process()
+    main()
